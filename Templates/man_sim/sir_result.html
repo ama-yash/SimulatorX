@@ -1,0 +1,853 @@
+{% include 'common/header.html' %}
+<div class="page-body-wrapper horizontal-menu">
+<div class="page-body" style="margin-left: 10px;">
+   <div class="container-fluid">
+      <h2>Manual Simulation Results - SIR Model</h2>
+      <br>
+      <div class='row'>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Spread of Infection in Entire community</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Total_Infection"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Total_Infection')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-4 col-md-12 box-col-12">
+            <div class="card" id='ml-card'>
+               <div class="card-header pb-0">
+                  <h5>Disease Infection Probability Prediction</h5>
+               </div>
+               <div class="card-body">
+                  <form id='ml' class="theme-form" method='POST'>{% csrf_token %}
+                     <div class="mb-3 row">
+                        <label class="col-form-label col-sm-3 pt-0"for='gender'>Gender</label>
+                        <select class="form-select btn-pill digits" id="gender">
+                           <option default='true' value=0>Male</option>
+                           <option value=1>Female</option>
+                        </select>
+                     </div>
+                     <div class="mb-3 row">
+                        <label class="col-form-label col-sm-3 pt-0"for='ethnicity'>Ethnicity</label>
+                        <select class="form-select btn-pill digits" id="ethnicity">
+                           <option default='true' value=0>White</option>
+                           <option value=1>Black</option>
+                           <option value=2>Asian</option>
+                           <option value=3>Other</option>
+                        </select>
+                     </div>
+                     <div class="mb-3 row">
+                        <label class="col-form-label col-sm-3 pt-0"for='age'>Age</label>
+                        <select class="form-select btn-pill digits" id="age">
+                           <option default='true' value=2>0-4</option>
+                           <option value=7>5-9</option>
+                           <option value=12>10-14</option>
+                           <option value=17>15-19</option>
+                           <option value=22>20-24</option>
+                           <option value=27>25-29</option>
+                           <option value=32>30-34</option>
+                           <option value=37>35-39</option>
+                           <option value=42>40-44</option>
+                           <option value=47>45-49</option>
+                           <option value=52>50-54</option>
+                           <option value=57>55-59</option>
+                           <option value=62>60-64</option>
+                           <option value=67>65-69</option>
+                           <option value=72>70-74</option>
+                           <option value=77>75+</option>
+                        </select>
+                     </div>
+                     <h5>OR</h5>
+                     <div class='mb-3 row'>
+                        <label class="col-sm-3 col-form-label">Select Image</label>
+                        <div class="col-sm-9">
+                           <input class="form-control" type="file">
+                        </div>
+                     </div>
+                     <div class="mb-3 row">
+                        <label class="col-form-label col-sm-3 pt-0"for='age2'>Contacted Entity Age</label>
+                        <select class="form-select btn-pill digits" id="age2">
+                           <option default='true' value=2>0-4</option>
+                           <option value=7>5-9</option>
+                           <option value=12>10-14</option>
+                           <option value=17>15-19</option>
+                           <option value=22>20-24</option>
+                           <option value=27>25-29</option>
+                           <option value=32>30-34</option>
+                           <option value=37>35-39</option>
+                           <option value=42>40-44</option>
+                           <option value=47>45-49</option>
+                           <option value=52>50-54</option>
+                           <option value=57>55-59</option>
+                           <option value=62>60-64</option>
+                           <option value=67>65-69</option>
+                           <option value=72>70-74</option>
+                           <option value=77>75+</option>
+                        </select>
+                     </div>
+                     <button type="button" onclick='sendPredData()' class="btn btn-primary">Predict</button>
+                     <br>
+                     <br>
+                     <h4 id='prob' style='display: none;'></h4>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      <h4>Infection Spread In Different Dimensions</h4>
+      <br>
+      <div class='row'>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Spread of Infection in Ethnic Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Eth_Infection"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Eth_Infection')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Spread of Infection in Gender Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Gen_Infection"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Gen_Infection')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Spread of Infection in Age Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Age_Infection"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Age_Infection')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <h4>Recovery</h4>
+      <br>
+      <div class ='row'>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Recovery in Entire community</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Total_Recovery"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Total_Recovery')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Recovery in Ethnic Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Eth_Recovery"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Eth_Recovery')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Recovery in Gender Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Gen_Recovery"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Gen_Recovery')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Recovery in Age Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Age_Recovery"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Age_Recovery')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <h4>SUSCEPTIBILITY</h4>
+      <br>
+      <div class ='row'>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Susceptibility in Entire Community</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Tot_Sus"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Tot_Sus')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Susceptibility in Ethnic Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Eth_Sus"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Eth_Sus')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Susceptibility in Gender Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Gen_Sus"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Gen_Sus')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Susceptibility in Age Groups</h5>
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Age_Sus"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Age_Sus')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.esm.js" integrity="sha512-IPqefcmFCuGcYxl/uIjvyCXwh5T9+EB2MFT7W9RUZd20d7PLfgdT975xdhyesvdXH6Au8SyXOw1236LY1lFl5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.esm.min.js" integrity="sha512-2Vi/lCX8NaXlAhzc28RAoteYAiJVoz4y3Xq/IpHQCw7KU25I34fDqJSVSUml2tQRVYFnf3IMy6O59zKJh79hiw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.js" integrity="sha512-b3xr4frvDIeyC3gqR1/iOi6T+m3pLlQyXNuvn5FiRrrKiMUJK3du2QqZbCywH6JxS5EOfW0DY0M6WwdXFbCBLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/helpers.esm.js" integrity="sha512-/2SCtwX/TWXQ8kJN8MhCXL5GQJkBhh5J184Uy/totMp+1pFXTQhV/hMMYHuSl+juR5WO9i11AvywRgYFotRIug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/helpers.esm.min.js" integrity="sha512-b3xZ1Eh852+/Ltha4XJd59YP2d+I+B6NPdB4H+Wns29GX9x5pLwlp8jnQtJYog3d5Xk1SWvhT2lgJDDBvpV0ow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="http://html2canvas.hertzen.com/dist/html2canvas.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="http://html2canvas.hertzen.com/dist/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+   function sendPredData(){
+      var n = Number('{{N}}');
+      var gender = document.getElementById('gender').value;
+      var ethnicity = document.getElementById('ethnicity').value;
+      var age = document.getElementById('age').value;
+      var age2 = document.getElementById('age2').value;
+      $.ajax({
+         type:'POST',
+         url: '/covid19/predict',
+         data:{
+            n:n,
+            gender:gender,
+            ethnicity:ethnicity,
+            age:age,
+            age2:age2,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+         },
+         success:function(data){
+            var obj = document.getElementById('prob');
+            var textP = 'PROBABILITY: ' + data.pred + ' %';
+            obj.innerText = textP;
+            obj.style.display = 'block';
+         }
+      })
+   }
+</script>
+    
+<script>
+   function saveAsImage(can){
+      var ImageData = document.getElementById(can).toDataURL('image/png').replace("image/png", "image/octet-stream");
+      window.location.href = imageImageData;
+   }
+   function getOptions(){
+      const options = {
+         plugins:{
+            legend:{
+               display:true,
+            },
+            title:{
+               display:false,
+               font:{
+                  color:'blue',
+                  size:24,
+               },
+               text:'COVID-19 Auto Simulation',
+               padding: {
+                    bottom: 30
+                  }
+            }
+         },
+         scales:{
+            y: {
+               title: {
+                  text: 'Population',
+                  display: true
+               },
+               grid: {
+                  display: true,
+               }
+            },
+            x: {
+               title: {
+                  text: 'Days',
+                  display: true
+               },
+               grid: {
+                  display: true,
+               }
+            }
+         },
+      }
+      return options;
+   }
+//--------------------------------------TOTAL INFECTION------------------------------------------
+   function getTotalInfectionData(){
+      var inf = '{{data.inf_total}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var labels = [];
+      for (i = 1; i <= inf.length; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Infected',
+            data: inf,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         }]
+      };
+      return data;
+   }
+   function getTotalInfectionConfig(){
+      const config = {
+         type: 'line',
+         data: getTotalInfectionData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myTotalInfectionChart = new Chart(
+      document.getElementById('Total_Infection'),
+      getTotalInfectionConfig()
+   );
+//---------------------------------------ETHNICITIES MIXED---------------------------------
+   function getEthInfectionData(){
+      var white_inf = '{{data.white_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var black_inf = '{{data.black_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var asian_inf = '{{data.asian_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var other_inf = '{{data.other_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      ilabel = Math.max(white_inf.length,black_inf.length,asian_inf.length,other_inf.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'White',
+            data: white_inf,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         },
+         {
+            label: 'Black',
+            data: black_inf,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+         {
+            label: 'Asian',
+            data: asian_inf,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         },
+         {
+            label: 'Other',
+            data: other_inf,
+            fill: false,
+            borderColor: 'black',
+            tension: 0.1
+         }
+      ]
+      };
+      return data;
+   }
+   function getEthInfectionConfig(){
+      const config = {
+         type: 'line',
+         data: getEthInfectionData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myEthInfectionChart = new Chart(
+      document.getElementById('Eth_Infection'),
+      getEthInfectionConfig()
+   );
+//-------------------------------------GENDER MIXED------------------------------
+   function getGenInfectionData(){
+      var male_inf = '{{data.male_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var female_inf = '{{data.female_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      ilabel = Math.max(male_inf.length,female_inf.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Male',
+            data: male_inf,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         },
+         {
+            label: 'Female',
+            data: female_inf,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+      ]
+      };
+      return data;
+   }
+   function getGenInfectionConfig(){
+      const config = {
+         type: 'line',
+         data: getGenInfectionData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myGenInfectionChart = new Chart(
+      document.getElementById('Gen_Infection'),
+      getGenInfectionConfig()
+   );
+//---------------------------------------------AGE MIXED-------------------------------------------
+   function getAgeInfectionData(){
+      var child_inf = '{{data.child_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var adult_inf = '{{data.adult_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var senior_inf = '{{data.senior_inf}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+      ilabel = Math.max(child_inf.length,adult_inf.length,senior_inf.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Child',
+            data: child_inf,
+            fill: false,
+            borderColor: 'yellow',
+            tension: 0.1
+         },
+         {
+            label: 'Adult',
+            data: adult_inf,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         },
+         {
+            label: 'Senior',
+            data: senior_inf,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+      ]
+      };
+      return data;
+   }
+   function getAgeInfectionConfig(){
+      const config = {
+         type: 'line',
+         data: getAgeInfectionData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myAgeInfectionChart = new Chart(
+      document.getElementById('Age_Infection'),
+      getAgeInfectionConfig()
+   );
+//--------------------------------------TOTAL RECOVERY----------------------------------------
+   function getTotalRecoveryData(){
+      var inf = '{{data.rec_total}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var labels = [];
+      for (i = 1; i <= inf.length; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Recovered',
+            data: inf,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         }]
+      };
+      return data;
+   }
+   function getTotalRecoveryConfig(){
+      const config = {
+         type: 'line',
+         data: getTotalRecoveryData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myTotalRecoveryChart = new Chart(
+      document.getElementById('Total_Recovery'),
+      getTotalRecoveryConfig()
+   );
+//-------------------------------------ETHNIC GROUPS RECOVERY------------------------------------------
+   function getEthRecoveryData(){
+      var white_rec = '{{data.white_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var black_rec = '{{data.black_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var asian_rec = '{{data.asian_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var other_rec = '{{data.other_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      ilabel = Math.max(white_rec.length,black_rec.length,asian_rec.length,other_rec.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'White',
+            data: white_rec,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         },
+         {
+            label: 'Black',
+            data: black_rec,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+         {
+            label: 'Asian',
+            data: asian_rec,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         },
+         {
+            label: 'Other',
+            data: other_rec,
+            fill: false,
+            borderColor: 'black',
+            tension: 0.1
+         }
+      ]
+      };
+      return data;
+   }
+   function getEthRecoveryConfig(){
+      const config = {
+         type: 'line',
+         data: getEthRecoveryData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myEthRecoveryChart = new Chart(
+      document.getElementById('Eth_Recovery'),
+      getEthRecoveryConfig()
+   );
+//--------------------------------------------GENDER RECOVERY--------------------------------------------
+   function getGenRecoveryData(){
+      var male_rec = '{{data.male_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var female_rec = '{{data.female_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      ilabel = Math.max(male_rec.length,female_rec.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Male',
+            data: male_rec,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         },
+         {
+            label: 'Female',
+            data: female_rec,
+            fill: false,
+            borderColor: 'yellow',
+            tension: 0.1
+         },
+      ]
+      };
+      return data;
+   }
+   function getGenRecoveryConfig(){
+      const config = {
+         type: 'line',
+         data: getGenRecoveryData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myGenRecoveryChart = new Chart(
+      document.getElementById('Gen_Recovery'),
+      getGenRecoveryConfig()
+   );
+//--------------------------------------------AGE RECOVERY----------------------------------------------
+   function getAgeRecoveryData(){
+      var child_rec = '{{data.child_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var adult_rec = '{{data.adult_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var senior_rec = '{{data.senior_rec}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+      ilabel = Math.max(child_rec.length,adult_rec.length,senior_rec.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Child',
+            data: child_rec,
+            fill: false,
+            borderColor: 'yellow',
+            tension: 0.1
+         },
+         {
+            label: 'Adult',
+            data: adult_rec,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         },
+         {
+            label: 'Senior',
+            data: senior_rec,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+      ]
+      };
+      return data;
+   }
+   function getAgeRecoveryConfig(){
+      const config = {
+         type: 'line',
+         data: getAgeRecoveryData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myAgeRecoveryChart = new Chart(
+      document.getElementById('Age_Recovery'),
+      getAgeRecoveryConfig()
+   );
+         //---------------------------------------TOTAL SUSCEPTIBILITY------------------------------------------
+function getTotalSusData(){
+      var inf = '{{data.sus_total}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var labels = [];
+      for (i = 1; i <= inf.length; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Susceptible',
+            data: inf,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         }]
+      };
+      return data;
+   }
+   function getTotalSusConfig(){
+      const config = {
+         type: 'line',
+         data: getTotalSusData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myTotalSusChart = new Chart(
+      document.getElementById('Tot_Sus'),
+      getTotalSusConfig()
+   );
+   //-------------------------------------ETHNICITY SUS-------------------------------------------------
+   function getEthSusData(){
+      var white_inf = '{{data.white_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var black_inf = '{{data.black_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var asian_inf = '{{data.asian_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var other_inf = '{{data.other_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      ilabel = Math.max(white_inf.length,black_inf.length,asian_inf.length,other_inf.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'White',
+            data: white_inf,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         },
+         {
+            label: 'Black',
+            data: black_inf,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+         {
+            label: 'Asian',
+            data: asian_inf,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         },
+         {
+            label: 'Other',
+            data: other_inf,
+            fill: false,
+            borderColor: 'black',
+            tension: 0.1
+         }
+      ]
+      };
+      return data;
+   }
+   function getEthSusConfig(){
+      const config = {
+         type: 'line',
+         data: getEthSusData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myEthSusChart = new Chart(
+      document.getElementById('Eth_Sus'),
+      getEthSusConfig()
+   );
+//---------------------------------------GENDER SUS------------------------------------------------
+function getGenSusData(){
+      var male_inf = '{{data.male_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var female_inf = '{{data.female_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      ilabel = Math.max(male_inf.length,female_inf.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Male',
+            data: male_inf,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+         },
+         {
+            label: 'Female',
+            data: female_inf,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+      ]
+      };
+      return data;
+   }
+   function getGenSusConfig(){
+      const config = {
+         type: 'line',
+         data: getGenSusData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myGenSusChart = new Chart(
+      document.getElementById('Gen_Sus'),
+      getGenSusConfig()
+   );
+//--------------------------------------AGE SUS-------------------------------------------------
+function getAgeSusData(){
+      var child_inf = '{{data.child_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var adult_inf = '{{data.adult_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var senior_inf = '{{data.senior_sus}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+      ilabel = Math.max(child_inf.length,adult_inf.length,senior_inf.length);
+      var labels = [];
+      for (i = 1; i <= ilabel; i++) {
+         labels.push(i);
+      }
+      const data = {
+         labels: labels,
+         datasets: [{
+            label: 'Child',
+            data: child_inf,
+            fill: false,
+            borderColor: 'yellow',
+            tension: 0.1
+         },
+         {
+            label: 'Adult',
+            data: adult_inf,
+            fill: false,
+            borderColor: 'green',
+            tension: 0.1
+         },
+         {
+            label: 'Senior',
+            data: senior_inf,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+         },
+      ]
+      };
+      return data;
+   }
+   function getAgeSusConfig(){
+      const config = {
+         type: 'line',
+         data: getAgeSusData(),
+         options: getOptions()
+      };
+      return config;
+   }
+   var myAgeSusChart = new Chart(
+      document.getElementById('Age_Sus'),
+      getAgeSusConfig()
+   );
+
+</script>
+{% include 'common/footer.html' %}
