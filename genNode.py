@@ -84,5 +84,4 @@ def generateNodes(N,eth,gen,ag,graph):
         G.nodes[i]['age'] = random.randint(15,54)
     for i in senior_nodes:
         G.nodes[i]['age'] = random.randint(55,110)
-    print(white_pop,black_pop,asian_pop,mixed_pop,male_pop,female_pop,child_pop,adult_pop,senior_pop)
     return G
