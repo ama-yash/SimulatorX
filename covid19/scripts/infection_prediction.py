@@ -55,9 +55,7 @@ def predict_infection(parameters):
     # we can also pass the number of neighbours, n_neighbors=5 is the default value
     knn.fit(X, y)
     X_train, X_test, y_train, y_test = train_test_split(infections.data[:, :4], infections.target, test_size=0.8)
-    print("Test set score: {:.2f}%".format(knn.score(X_test, y_test) * 100))
     source_age = int(random.uniform(0,90))
     dataClass = knn.predict([[parameters['ethnicity'], parameters['gender'], parameters['target_age'], parameters['source_age']]]) # make prediction
     predicted_probability = infections.target_names[dataClass]
-    print("Predicted infection probability:", (predicted_probability[0] * 100), "%")
     return predicted_probability[0]*100
