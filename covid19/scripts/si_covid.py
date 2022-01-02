@@ -22,7 +22,6 @@ def activate_graph(activity, graph,N):
 
 def simulate_si(parameters):
     N = parameters['N']
-    print(N)
     ethn = {'white':parameters['white'],'black':parameters['black'],'asian':parameters['asian'],'other':parameters['other']}
     gen = {'male':parameters['male'],'female':parameters['female']}
     ag = {'child':parameters['child'],'adult':parameters['adult'],'senior':parameters['senior']}
