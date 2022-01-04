@@ -13,7 +13,7 @@ Unlike COVID-19 Auto Simulation, the application provides complete flexibility t
 ### Tools and Technologies
 The backend of web-application is handled by Python Django framework while the frontend is designed using HTML5, Javacript, CSS, AJAX, and ChartJS. For graph/network operations, NetworkX library is used. VGG16 model architechture is used for developing facial recogntion system. KNN classifier is used for predicting the chance of catching COVID-19 on an individual level. Key libraries include Pandas, Numpy, Keras, Tensorflow, NetworkX, and sklearn.
 
-### Installation
+## Installation
 
 1. Clone Repo
 ```
@@ -26,3 +26,11 @@ The backend of web-application is handled by Python Django framework while the f
 ```
     pip install -r requirements.txt
 ```
+### Using Facial Recognition System
+The Facial Recognition consists of three models: Age Model, Gender Model, and Ethnicity Model. Due to size constraints, the user is first required to download those models from Google Drive.
+
+Download [Age Model](https://drive.google.com/file/d/1-NnO9GiRVAvugq4Oc5XE2Ezoj596oB56/view?usp=sharing)
+
+Download [Ethnicity Model](https://drive.google.com/file/d/1-Dz-kjs2ny5pRshXzfrA-7tWvPNm3mN6/view?usp=sharing)
+
+Download [Gender Model](https://drive.google.com/file/d/1-VfamgvLQf1ClHfhia5oMMvK19ICTDSD/view?usp=sharing)
