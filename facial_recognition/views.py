@@ -24,9 +24,9 @@ def uploadImages(request):
             path_list.append(item)
     img_arr = np.asarray(img_arr)
     img_arr = img_arr/255.0
-    eth_path = settings.STATIC_ROOT + '/eth_model.h5'
-    gen_path = settings.STATIC_ROOT + '/gen_model.h5'
-    age_path = settings.STATIC_ROOT + '/age_model.h5'
+    eth_path = settings.STATIC_ROOT + '/eth-model.h5'
+    gen_path = settings.STATIC_ROOT + '/gen-model.h5'
+    age_path = settings.STATIC_ROOT + '/age-model.h5'
     eth_model = load_model(eth_path)
     gen_model = load_model(gen_path)
     age_model = load_model(age_path)
@@ -69,9 +69,9 @@ def predictImage(request):
             path_list.append(item)
     img_arr = np.asarray(img_arr)
     img_arr = img_arr/255.0
-    eth_path = settings.STATIC_ROOT + '/eth_model.h5'
-    gen_path = settings.STATIC_ROOT + '/gen_model.h5'
-    age_path = settings.STATIC_ROOT + '/age_model.h5'
+    eth_path = settings.STATIC_ROOT + '/eth-model.h5'
+    gen_path = settings.STATIC_ROOT + '/gen-model.h5'
+    age_path = settings.STATIC_ROOT + '/age-model.h5'
     eth_model = load_model(eth_path)
     gen_model = load_model(gen_path)
     age_model = load_model(age_path)
