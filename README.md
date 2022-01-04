@@ -26,6 +26,12 @@ The backend of web-application is handled by Python Django framework while the f
 ```
     pip install -r requirements.txt
 ```
+
+3. Start the local server
+
+```
+    python manage.py runserver
+```
 ### Using Facial Recognition System
 The Facial Recognition consists of three models: Age Model, Gender Model, and Ethnicity Model. Due to size constraints, the user is first required to download those models from Google Drive.
 
@@ -38,3 +44,8 @@ Download [Gender Model](https://drive.google.com/file/d/1-VfamgvLQf1ClHfhia5oMMv
 Once downloaded, make sure the name of age, ethnicity, and gender models are named as 'age-model.h5', 'eth-model.h5', and 'gen-model.h5' respectively.
 
 Next step is to place these models in an appropriate location. These models should be placed in 'static-only' folder which could be found in '/simulatorx/static/'.
+
+Note that if Tensorflow is not configured with local system GPU, the facial recogntion system might take a considerable amount of time for operations. In these cases, alternative options should be preferred.
+
+## Contact For Queries
+For any query related to the software, please proceed to mail at yash.soni5999@gmail.com
