@@ -12,3 +12,17 @@ Unlike COVID-19 Auto Simulation, the application provides complete flexibility t
 
 ### Tools and Technologies
 The backend of web-application is handled by Python Django framework while the frontend is designed using HTML5, Javacript, CSS, AJAX, and ChartJS. For graph/network operations, NetworkX library is used. VGG16 model architechture is used for developing facial recogntion system. KNN classifier is used for predicting the chance of catching COVID-19 on an individual level. Key libraries include Pandas, Numpy, Keras, Tensorflow, NetworkX, and sklearn.
+
+### Installation
+
+1. Clone Repo
+```
+    git clone https://github.com/ama-yash/SimulatorX.git
+    cd SimulatorX
+```
+
+2. Install the Dependencies
+
+```
+    pip install -r requirements.txt
+```
