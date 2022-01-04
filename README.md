@@ -34,3 +34,7 @@ Download [Age Model](https://drive.google.com/file/d/1-NnO9GiRVAvugq4Oc5XE2Ezoj5
 Download [Ethnicity Model](https://drive.google.com/file/d/1-Dz-kjs2ny5pRshXzfrA-7tWvPNm3mN6/view?usp=sharing)
 
 Download [Gender Model](https://drive.google.com/file/d/1-VfamgvLQf1ClHfhia5oMMvK19ICTDSD/view?usp=sharing)
+
+Once downloaded, make sure the name of age, ethnicity, and gender models are named as 'age-model.h5', 'eth-model.h5', and 'gen-model.h5' respectively.
+
+Next step is to place these models in an appropriate location. These models should be placed in 'static-only' folder which could be found in '/simulatorx/static/'.
