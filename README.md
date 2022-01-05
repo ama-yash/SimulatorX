@@ -46,6 +46,8 @@ Once downloaded, make sure the name of age, ethnicity, and gender models are nam
 Next step is to place these models in an appropriate location. These models should be placed in 'static-only' folder which could be found in '/simulatorx/static/'.
 
 Note that if Tensorflow is not configured with local system GPU, the facial recogntion system might take a considerable amount of time for operations. In these cases, alternative options should be preferred.
+## Datasets
+For testing the accuracy of software, the result produced by SIS simulation on Westminster Population using COVID-19 Auto Simulation was tested with real NHS data of Westminster which could be found in CSV format in datasets file. The COVID-19 infection rates used by the software can also be found in the same path.
 
 ## Contact For Queries
 For any query related to the software, please proceed to mail at yash.soni5999@gmail.com
