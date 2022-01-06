@@ -1,0 +1,8 @@
+GENDER GROUPS:
+  Male Infection Rate: 0.17
+  Female Infection Rate: 0.146
+ETHNIC GROUPS:
+  White Infection Rate: 0.7392
+  Black Infection Rate: 0.8618
+  Asian Infection Rate: 0.8799
+  Other Infection Rate: 0.4927
