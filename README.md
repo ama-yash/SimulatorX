@@ -55,7 +55,7 @@ White Ethnic Group Infection and Recovery Rates: https://upcommons.upc.edu/bitst
 
 Asian Ethnic Group Infection Rate: https://www.sciencedirect.com/science/article/pii/S096007792030446X
 
-Asian Ethnic Group Recovery Rate: https://www.researchgate.net/profile/Md-Islam-477/publication/340604406_COVID-19_Epidemic_Compartments_Model_and_Bangladesh/links/5ea9356292851cb26762fdc7/COVID-19-Epidemic-Compartments-Model-and-Bangladesh.pdf
+Asian Ethnic Group Recovery Rate: https://www.researchgate.net/publication/340604406_COVID-19_Epidemic_Compartments_Model_and_Bangladesh
 
 Black Ethnic Group Infection and Recovery Rates: https://www.sciencedirect.com/science/article/pii/S0048969720324761
 
