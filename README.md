@@ -47,7 +47,17 @@ Next step is to place these models in an appropriate location. These models shou
 
 Note that if Tensorflow is not configured with local system GPU, the facial recogntion system might take a considerable amount of time for operations. In these cases, alternative options should be preferred.
 ## Datasets
-For testing the accuracy of software, the result produced by SIS simulation on Westminster Population using COVID-19 Auto Simulation was tested with real NHS data of Westminster which could be found in CSV format in datasets file. The COVID-19 infection rates used by the software can also be found in the same path.
+For testing the accuracy of software, the result produced by SIS simulation on Westminster Population using COVID-19 Auto Simulation was tested with real NHS data of Westminster which could be found in CSV format in datasets file. The COVID-19 infection and recovery parameters used by the software can also be found in the same path. 
+### Sources Of Parameters
+Age-specific Infection Rates: https://www.nature.com/articles/s41591-020-0962-9
+
+White Ethnic Group Infection and Recovery Rates: https://upcommons.upc.edu/bitstream/handle/2117/330579/SEIRmodelCOVID19.pdf?sequence=1&isAllowed=y
+
+Asian Ethnic Group Infection Rate: https://www.sciencedirect.com/science/article/pii/S096007792030446X
+
+Asian Ethnic Group Recovery Rate: https://www.researchgate.net/profile/Md-Islam-477/publication/340604406_COVID-19_Epidemic_Compartments_Model_and_Bangladesh/links/5ea9356292851cb26762fdc7/COVID-19-Epidemic-Compartments-Model-and-Bangladesh.pdf
+
+Black Ethnic Group Infection and Recovery Rates: https://www.sciencedirect.com/science/article/pii/S0048969720324761
 
 ## Contact For Queries
 For any query related to the software, please proceed to mail at yash.soni5999@gmail.com
