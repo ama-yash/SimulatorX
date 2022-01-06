@@ -1,0 +1,4 @@
+White Recovery Rate: 0.1585
+Black Recovery Rate: 0.2910
+Asian Recovery Rate: 0.1428
+Other Recovery Rate: 0.1923
