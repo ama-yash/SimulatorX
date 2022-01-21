@@ -47,7 +47,11 @@ Next step is to place these models in an appropriate location. These models shou
 
 Note that if Tensorflow is not configured with local system GPU, the facial recogntion system might take a considerable amount of time for operations. In these cases, alternative options should be preferred.
 ## Datasets
-For testing the accuracy of software, the result produced by SIS simulation on Westminster Population using COVID-19 Auto Simulation was tested with real NHS data of Westminster which could be found in CSV format in datasets file. The COVID-19 infection and recovery parameters used by the software can also be found in the same path. 
+For testing the accuracy of software, the result produced by SIS simulation on Westminster Population using COVID-19 Auto Simulation was tested with real NHS data of Westminster which could be found in CSV format in datasets file. The comparison can be visualised using the figure provided below in which orange line represents data produced by the SIS model using COVID-19 Auto Simulation and blue line represents NHS Westminster COVID-19 infection data from 10th March 2020 to 1st July 2020 when no restrictions were placed.
+
+![westminter_results](https://github.com/ama-yash/SimulatorX/blob/master/datasets/westminster_results.png)
+
+The COVID-19 infection and recovery parameters used by the software can also be found in the same path. 
 ### Sources Of Parameters
 Age-specific Infection Rates: https://www.nature.com/articles/s41591-020-0962-9
 
