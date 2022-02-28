@@ -1,25 +1,6 @@
 def count_all_si(G):
     nodes = len(G.nodes)
-    total_inf_count = 0
-    total_sus_count = 0
-    white_inf_count = 0
-    white_sus_count = 0
-    black_inf_count = 0
-    black_sus_count = 0
-    asian_inf_count = 0
-    asian_sus_count = 0
-    other_inf_count = 0
-    other_sus_count = 0
-    male_inf_count = 0
-    female_inf_count = 0
-    male_sus_count = 0
-    female_sus_count = 0
-    child_inf_count = 0
-    child_sus_count = 0
-    adult_inf_count = 0
-    adult_sus_count = 0
-    senior_inf_count = 0
-    senior_sus_count = 0
+    total_inf_count = total_sus_count = white_inf_count = white_sus_count = black_inf_count = black_sus_count = asian_inf_count = asian_sus_count = other_inf_count = other_sus_count = male_inf_count = female_inf_count = male_sus_count = female_sus_count = child_inf_count = child_sus_count = adult_inf_count = adult_sus_count = senior_inf_count = senior_sus_count = 0
     for node in range(0,nodes):
         if G.nodes[node]['status'] == 'I':
             total_inf_count += 1
@@ -210,36 +191,7 @@ def count_all_si(G):
     return data
 def count_all_sir(G):
     nodes = len(G.nodes)
-    total_sus_count = 0
-    total_inf_count = 0
-    total_rec_count = 0
-    white_inf_count = 0
-    white_sus_count = 0
-    white_rec_count = 0
-    black_inf_count = 0
-    black_sus_count = 0
-    black_rec_count = 0
-    asian_inf_count = 0
-    asian_rec_count = 0
-    asian_sus_count = 0
-    other_inf_count = 0
-    other_rec_count = 0
-    other_sus_count = 0
-    male_inf_count = 0
-    male_sus_count = 0
-    female_inf_count = 0
-    female_sus_count = 0
-    male_rec_count = 0
-    female_rec_count = 0
-    child_inf_count = 0
-    child_sus_count = 0
-    child_rec_count = 0
-    adult_inf_count = 0
-    adult_sus_count = 0
-    adult_rec_count = 0
-    senior_inf_count = 0
-    senior_rec_count = 0
-    senior_sus_count = 0
+    total_sus_count = total_inf_count = total_rec_count = white_inf_count = white_sus_count = white_rec_count = black_inf_count = black_sus_count = black_rec_count = asian_inf_count = asian_rec_count = asian_sus_count = other_inf_count = other_rec_count = other_sus_count = male_inf_count = male_sus_count = female_inf_count = female_sus_count = male_rec_count = female_rec_count = child_inf_count = child_sus_count = child_rec_count = adult_inf_count = adult_sus_count = adult_rec_count = senior_inf_count = senior_rec_count = senior_sus_count = 0
     for node in range(0,nodes):
         if G.nodes[node]['status'] == 'I':
             total_inf_count += 1
