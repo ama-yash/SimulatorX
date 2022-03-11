@@ -104,3 +104,67 @@ def recover_sis(a_nodes,G,recovery_parameters):
         if G.nodes[n]['status'] == 'I':
             if random.uniform(0,1) < get_rec(n,G,recovery_parameters):
                 G.nodes[n]['status'] = 'S'
+def init_si_counts():
+    counts_list = ['inf_total', 'sus_total', 'white_sus', 'white_inf', 'black_sus', 'black_inf', 'asian_sus', 'asian_inf', 'other_sus', 'other_inf', 'male_inf', 'male_sus', 'female_inf', 'female_sus', 'child_inf', 'child_sus', 'adult_inf', 'adult_sus', 'senior_inf', 'senior_sus']
+    count_dicts = {k:[] for k in counts_list}
+    return count_dicts
+
+def init_sir_counts():
+    counts_list = ['inf_total', 'sus_total', 'rec_total', 'white_sus', 'white_rec', 'white_inf', 'black_sus','black_rec', 'black_inf', 'asian_sus','asian_rec', 'asian_inf', 'other_sus', 'other_rec', 'other_inf', 'male_inf','male_rec', 'male_sus', 'female_inf', 'female_rec', 'female_sus', 'child_inf','child_rec', 'child_sus', 'adult_inf','adult_rec', 'adult_sus', 'senior_inf', 'senior_rec', 'senior_sus']
+    count_dicts = {k:[] for k in counts_list}
+    return count_dicts
+
+def update_sir_counts(count_dicts,data):
+    count_dicts['sus_total'].append(data['total_sus'])
+    count_dicts['inf_total'].append(data['total_inf'])
+    count_dicts['rec_total'].append(data['total_rec']) 
+    count_dicts['white_sus'].append(data['white_sus'])
+    count_dicts['white_inf'].append(data['white_inf'])
+    count_dicts['white_rec'].append(data['white_rec']) 
+    count_dicts['black_sus'].append(data['black_sus'])
+    count_dicts['black_inf'].append(data['black_inf'])
+    count_dicts['black_rec'].append(data['black_rec'])
+    count_dicts['asian_sus'].append(data['asian_sus'])
+    count_dicts['asian_inf'].append(data['asian_inf'])
+    count_dicts['asian_rec'].append(data['asian_rec'])
+    count_dicts['other_sus'].append(data['other_sus'])
+    count_dicts['other_inf'].append(data['other_inf'])
+    count_dicts['other_rec'].append(data['other_rec'])
+    count_dicts['male_sus'].append(data['male_sus'])
+    count_dicts['male_inf'].append(data['male_inf'])
+    count_dicts['male_rec'].append(data['male_rec'])
+    count_dicts['female_sus'].append(data['female_sus'])
+    count_dicts['female_inf'].append(data['female_inf'])
+    count_dicts['female_rec'].append(data['female_rec'])
+    count_dicts['child_sus'].append(data['child_sus'])
+    count_dicts['child_inf'].append(data['child_inf'])
+    count_dicts['child_rec'].append(data['child_rec'])
+    count_dicts['adult_sus'].append(data['adult_sus'])
+    count_dicts['adult_inf'].append(data['adult_inf'])
+    count_dicts['adult_rec'].append(data['adult_rec'])
+    count_dicts['senior_sus'].append(data['senior_sus'])
+    count_dicts['senior_inf'].append(data['senior_inf'])
+    count_dicts['senior_rec'].append(data['senior_rec'])
+    return count_dicts
+def update_si_counts(count_dicts,data):
+    count_dicts['sus_total'].append(data['total_sus'])
+    count_dicts['inf_total'].append(data['total_inf'])
+    count_dicts['white_sus'].append(data['white_sus'])
+    count_dicts['white_inf'].append(data['white_inf'])
+    count_dicts['black_sus'].append(data['black_sus'])
+    count_dicts['black_inf'].append(data['black_inf'])
+    count_dicts['asian_sus'].append(data['asian_sus'])
+    count_dicts['asian_inf'].append(data['asian_inf'])
+    count_dicts['other_sus'].append(data['other_sus'])
+    count_dicts['other_inf'].append(data['other_inf'])
+    count_dicts['male_sus'].append(data['male_sus'])
+    count_dicts['male_inf'].append(data['male_inf'])
+    count_dicts['female_sus'].append(data['female_sus'])
+    count_dicts['female_inf'].append(data['female_inf'])
+    count_dicts['child_sus'].append(data['child_sus'])
+    count_dicts['child_inf'].append(data['child_inf'])
+    count_dicts['adult_sus'].append(data['adult_sus'])
+    count_dicts['adult_inf'].append(data['adult_inf'])
+    count_dicts['senior_sus'].append(data['senior_sus'])
+    count_dicts['senior_inf'].append(data['senior_inf'])
+    return count_dicts
