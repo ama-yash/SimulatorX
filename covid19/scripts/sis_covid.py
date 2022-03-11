@@ -4,7 +4,7 @@ import numpy as np
 import networkx as nx
 from genNode import generateNodes
 from cov19_simulation_tools import infect,sis_recover,loadDep
-from gen_simulation_tools import seed_graph
+from gen_simulation_tools import seed_graph, init_si_counts, update_si_counts
 from count import count_all_si
 
 def power_law(x0, x1, gamma,N):
@@ -22,6 +22,7 @@ def activate_graph(activity, graph,N):
 
 def simulate_sis(parameters):
     N = parameters['N']
+    print(N)
     ethn = {'white':parameters['white'],'black':parameters['black'],'asian':parameters['asian'],'other':parameters['other']}
     gen = {'male':parameters['male'],'female':parameters['female']}
     ag = {'child':parameters['child'],'adult':parameters['adult'],'senior':parameters['senior']}
@@ -34,26 +35,7 @@ def simulate_sis(parameters):
     eta = 1.
     gamma = -2.1
     act = power_law(epsilon,1,gamma,N)
-    infected_population = []
-    susceptible_population = []
-    white_sus_pop = []
-    white_inf_pop = []
-    black_sus_pop = []
-    black_inf_pop = []
-    asian_sus_pop = []
-    asian_inf_pop = []
-    other_sus_pop = []
-    other_inf_pop = []
-    male_inf_pop = []
-    male_sus_pop = []
-    female_inf_pop = []
-    female_sus_pop = []
-    child_inf_pop = []
-    child_sus_pop = []
-    adult_inf_pop = []
-    adult_sus_pop = []
-    senior_inf_pop = []
-    senior_sus_pop = []
+    count_dicts = init_si_counts()
     m=2
     seeds = float(parameters['seeds'])
     seed_graph(G,seeds)
@@ -69,46 +51,5 @@ def simulate_sis(parameters):
         infect(active_nodes,G,dataframe)
         sis_recover(active_nodes,G)
         data = count_all_si(G)
-        susceptible_population.append(data['total_sus'])
-        infected_population.append(data['total_inf'])
-        white_sus_pop.append(data['white_sus'])
-        white_inf_pop.append(data['white_inf'])
-        black_sus_pop.append(data['black_sus'])
-        black_inf_pop.append(data['black_inf'])
-        asian_sus_pop.append(data['asian_sus'])
-        asian_inf_pop.append(data['asian_inf'])
-        other_sus_pop.append(data['other_sus'])
-        other_inf_pop.append(data['other_inf'])
-        male_sus_pop.append(data['male_sus'])
-        male_inf_pop.append(data['male_inf'])
-        female_sus_pop.append(data['female_sus'])
-        female_inf_pop.append(data['female_inf'])
-        child_sus_pop.append(data['child_sus'])
-        child_inf_pop.append(data['child_inf'])
-        adult_sus_pop.append(data['adult_sus'])
-        adult_inf_pop.append(data['adult_inf'])
-        senior_sus_pop.append(data['senior_sus'])
-        senior_inf_pop.append(data['senior_inf'])
-    data = {
-        'sus_total':susceptible_population,
-        'inf_total':infected_population,
-        'white_sus':white_sus_pop,
-        'white_inf':white_inf_pop,
-        'black_sus':black_sus_pop,
-        'black_inf':black_inf_pop,
-        'asian_sus':asian_sus_pop,
-        'asian_inf':asian_inf_pop,
-        'other_sus':other_sus_pop,
-        'other_inf':other_inf_pop,
-        'male_inf':male_inf_pop,
-        'male_sus':male_sus_pop,
-        'female_inf':female_inf_pop,
-        'female_sus':female_sus_pop,
-        'child_inf':child_inf_pop,
-        'child_sus':child_sus_pop,
-        'adult_inf':adult_inf_pop,
-        'adult_sus':adult_sus_pop,
-        'senior_inf':senior_inf_pop,
-        'senior_sus':senior_sus_pop
-    }       
-    return data
+        count_dicts = update_si_counts(count_dicts,data)
+    return count_dicts
