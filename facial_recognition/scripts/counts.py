@@ -1,4 +1,4 @@
-def count(eth_list,gen_list,age_list):
+def count(eth_list, gen_list, age_list):
     n = len(eth_list)
     white_count = 0
     black_count = 0
@@ -30,15 +30,15 @@ def count(eth_list,gen_list,age_list):
             adult_count += 1
         else:
             senior_count += 1
-    white_ratio = round((white_count * 100) / n,2)
-    black_ratio = round((black_count * 100) / n,2)
-    asian_ratio = round((asian_count * 100) / n,2)
-    other_ratio = round((other_count * 100) / n,2)
-    male_ratio = round((male_count * 100) / n,2)
-    female_ratio = round((female_count * 100) / n,2)
-    child_ratio = round((child_count * 100) / n,2)
-    adult_ratio = round((adult_count * 100) / n,2)
-    senior_ratio = round((senior_count * 100) / n,2)
+    white_ratio = round((white_count * 100) / n, 2)
+    black_ratio = round((black_count * 100) / n, 2)
+    asian_ratio = round((asian_count * 100) / n, 2)
+    other_ratio = round((other_count * 100) / n, 2)
+    male_ratio = round((male_count * 100) / n, 2)
+    female_ratio = round((female_count * 100) / n, 2)
+    child_ratio = round((child_count * 100) / n, 2)
+    adult_ratio = round((adult_count * 100) / n, 2)
+    senior_ratio = round((senior_count * 100) / n, 2)
     if (white_ratio + black_ratio + asian_ratio + other_ratio) > 100:
         diff = (white_ratio + black_ratio + asian_ratio + other_ratio) - 100
         other_ratio = other_ratio - diff
@@ -58,15 +58,15 @@ def count(eth_list,gen_list,age_list):
         diff = 100 - (child_ratio + adult_ratio + senior_ratio)
         senior_ratio = senior_ratio + diff
     data = {
-        'N': n,
-        'white':white_ratio,
-        'black':black_ratio,
-        'asian':asian_ratio,
-        'other':other_ratio,
-        'male':male_ratio,
-        'female':female_ratio,
-        'child':child_ratio,
-        'adult':adult_ratio,
-        'senior':senior_ratio
+        "N": n,
+        "white": white_ratio,
+        "black": black_ratio,
+        "asian": asian_ratio,
+        "other": other_ratio,
+        "male": male_ratio,
+        "female": female_ratio,
+        "child": child_ratio,
+        "adult": adult_ratio,
+        "senior": senior_ratio,
     }
     return data

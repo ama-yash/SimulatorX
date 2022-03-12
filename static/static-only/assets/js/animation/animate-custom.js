@@ -1,0 +1,1 @@
+/Users/terrybrett/Documents/GitHub/simulatorx/static/static/assets/js/animation/animate-custom.js

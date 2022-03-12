@@ -1,15 +1,22 @@
 import random
+
 import pandas as pd
+
 from count import *
+
+
 def loadDep():
-    dataframe = pd.read_csv('https://raw.githubusercontent.com/ama-yash/dataset/main/susceptibility_matrix2.csv')
+    dataframe = pd.read_csv(
+        "https://raw.githubusercontent.com/ama-yash/dataset/main/susceptibility_matrix2.csv"
+    )
     return dataframe
 
-def get_beta(nodeA,nodeB,G,dataframe):
-    ageA = G.nodes[nodeA]['age']
-    ageB = G.nodes[nodeB]['age']
-    gender = G.nodes[nodeA]['gender']
-    eth = G.nodes[nodeA]['ethnicity']
+
+def get_beta(nodeA, nodeB, G, dataframe):
+    ageA = G.nodes[nodeA]["age"]
+    ageB = G.nodes[nodeB]["age"]
+    gender = G.nodes[nodeA]["gender"]
+    eth = G.nodes[nodeA]["ethnicity"]
     if ageA >= 0 and ageA <= 5:
         row = 0
     elif ageA > 5 and ageA <= 10:
@@ -74,13 +81,13 @@ def get_beta(nodeA,nodeB,G,dataframe):
         col = 14
     elif ageB > 75:
         col = 15
-    age_p = dataframe.iloc[row,col]
-    male_p = 0.17 
+    age_p = dataframe.iloc[row, col]
+    male_p = 0.17
     female_p = 0.146
-    white_p = 0.7392 #0
-    sa_p = 0.8799 #3
-    black_p = 0.8618 #1
-    mixed_p = 0.4927 #2
+    white_p = 0.7392  # 0
+    sa_p = 0.8799  # 3
+    black_p = 0.8618  # 1
+    mixed_p = 0.4927  # 2
     if eth == 0:
         if gender == 0:
             beta = age_p * male_p * sa_p
@@ -103,10 +110,11 @@ def get_beta(nodeA,nodeB,G,dataframe):
             beta = age_p * female_p * mixed_p
     return beta
 
-def get_rec(node,G):
-    age = G.nodes[node]['age']
-    gender = G.nodes[node]['gender']
-    eth = G.nodes[node]['ethnicity']
+
+def get_rec(node, G):
+    age = G.nodes[node]["age"]
+    gender = G.nodes[node]["gender"]
+    eth = G.nodes[node]["ethnicity"]
     white_p = 0.1585
     sa_p = 0.1428
     black_p = 0.2910
@@ -147,26 +155,35 @@ def get_rec(node,G):
         rec = rec * mixed_p
     return rec
 
-def infect(a_nodes,G,dataframe):
+
+def infect(a_nodes, G, dataframe):
     for n in a_nodes:
         neighbors = list(G.neighbors(n))
         if len(neighbors) > 0:
             for neighbor in neighbors:
-                if G.nodes[n]['status'] == 'S':
-                    if random.uniform(0,1) < (get_beta(n,neighbor,G,dataframe) - 0.08):
-                        G.nodes[n]['status'] = 'I'
-def sis_recover(a_nodes,G):
+                if G.nodes[n]["status"] == "S":
+                    if random.uniform(0, 1) < (
+                        get_beta(n, neighbor, G, dataframe) - 0.08
+                    ):
+                        G.nodes[n]["status"] = "I"
+
+
+def sis_recover(a_nodes, G):
     for n in a_nodes:
-        if G.nodes[n]['status'] == 'I':
-            if random.uniform(0,1) < get_rec(n,G):
-                G.nodes[n]['status'] = 'S'
-def si_recover(a_nodes,G):
+        if G.nodes[n]["status"] == "I":
+            if random.uniform(0, 1) < get_rec(n, G):
+                G.nodes[n]["status"] = "S"
+
+
+def si_recover(a_nodes, G):
     for n in a_nodes:
-        if G.nodes[n]['status'] == 'I':
-            if random.uniform(0,1) < get_rec(n,G):
-                G.nodes[n]['status'] = 'S'
-def sir_recover(a_nodes,G):
+        if G.nodes[n]["status"] == "I":
+            if random.uniform(0, 1) < get_rec(n, G):
+                G.nodes[n]["status"] = "S"
+
+
+def sir_recover(a_nodes, G):
     for n in a_nodes:
-        if G.nodes[n]['status'] == 'I':
-            if random.uniform(0,1) < get_rec(n,G):
-                G.nodes[n]['status'] = 'R'
+        if G.nodes[n]["status"] == "I":
+            if random.uniform(0, 1) < get_rec(n, G):
+                G.nodes[n]["status"] = "R"
