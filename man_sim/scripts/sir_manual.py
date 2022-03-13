@@ -1,13 +1,8 @@
 import random
 
 from count import count_all_sir
-from gen_simulation_tools import (
-    infect,
-    init_sir_counts,
-    recover_sir,
-    seed_graph,
-    update_sir_counts,
-)
+from gen_simulation_tools import (infect, init_sir_counts, recover_sir,
+                                  seed_graph, update_sir_counts)
 from genNode import generateNodes
 
 

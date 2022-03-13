@@ -189,7 +189,8 @@ def count_attribute(
 
     df["binned"] = pd.cut(df["age"], age_bins)
 
-'''
+
+"""
 data = {
         "total_inf": total_inf_count,
         "total_rec": total_rec_count,
@@ -222,4 +223,4 @@ data = {
         "adult_sus": adult_sus_count,
         "senior_sus": senior_sus_count,
     }
-'''
+"""

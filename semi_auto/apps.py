@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class SemiAutoConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'semi_auto'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "semi_auto"

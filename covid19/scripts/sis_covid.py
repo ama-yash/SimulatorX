@@ -3,7 +3,6 @@ import random
 import networkx as nx
 import numpy as np
 import pandas as pd
-
 from count import count_all_si
 from covid_19_selectors import infect
 from gen_simulation_tools import init_si_counts, seed_graph, update_si_counts

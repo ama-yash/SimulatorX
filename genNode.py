@@ -2,7 +2,6 @@ import random
 
 import networkx as nx
 import numpy as np
-
 from selector.selector import round_number
 
 

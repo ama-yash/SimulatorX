@@ -3,9 +3,9 @@ import random
 import networkx as nx
 import numpy as np
 import pandas as pd
-
 from count import count_all_si
-from gen_simulation_tools import infect, init_si_counts, seed_graph, update_si_counts
+from gen_simulation_tools import (infect, init_si_counts, seed_graph,
+                                  update_si_counts)
 from genNode import generateNodes
 
 
