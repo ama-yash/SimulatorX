@@ -4,7 +4,8 @@ from count import count_all_si
 from covid_19_selectors import infect
 from gen_simulation_tools import init_si_counts, update_si_counts
 from genNode import generateNodes
-from selector.selector import load_susceptibility_matrix, seed_graph, activate_graph, power_law
+from selector.selector import (activate_graph, load_susceptibility_matrix,
+                               power_law, seed_graph)
 
 
 def simulate_si(parameters):

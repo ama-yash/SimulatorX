@@ -1,6 +1,6 @@
 import random
-import pandas as pd
 
+import pandas as pd
 from covid_19_selectors import get_beta
 from genNode import generateNodes
 from selector.selector import load_susceptibility_matrix
@@ -10,6 +10,7 @@ def generate_DataFrame():
     return pd.DataFrame(
         columns=["Ethnicity", "Gender", "Target_Age", "Source_Age", "Beta_Class"]
     )
+
 
 def run(G, N, dataframe):
     df = generate_DataFrame()
