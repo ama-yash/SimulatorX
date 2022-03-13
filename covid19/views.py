@@ -1,83 +1,75 @@
+from django.conf import settings
 from django.http.response import JsonResponse
 from django.shortcuts import render
-from django.conf import settings
-from .scripts.sis_covid import *
+
+from semi_auto.models import Population
+
 from .scripts.csv_generator import *
 from .scripts.infection_prediction import *
-from .scripts.sir_covid import *
 from .scripts.si_covid import *
-from semi_auto.models import Population
-# Create your views here.
+from .scripts.sir_covid import *
+from .scripts.sis_covid import *
+
+
 def getIndex(request):
-    template = 'covid19/index.html'
-    area_names = Population.objects.raw('select id,area_name from semi_auto_population;')
-    data = {'dobj':area_names}
-    return render(request,template,data)
+    area_names = Population.objects.raw(
+        "select id,area_name from semi_auto_population;"
+    )
+    data = {"dobj": area_names}
+    return render(request, "covid19/index.html", data)
+
 
 def getResult(request):
-    N = int(request.POST.get('pop_size'))
-    male = float(request.POST.get('male'))
-    female = float(request.POST.get('female'))
-    white = float(request.POST.get('white'))
-    black = float(request.POST.get('black'))
-    asian = float(request.POST.get('asian'))
-    other = float(request.POST.get('other'))
-    child = float(request.POST.get('child'))
-    adult = float(request.POST.get('adult'))
-    senior = float(request.POST.get('senior'))
-    model_type = int(request.POST.get('model'))
-    time = int(request.POST.get('time'))
-    seeds = float(request.POST.get('seeds'))
-    parameters = {
-        'N':N,
-        'male':male,
-        'female':female,
-        'white':white,
-        'black':black,
-        'asian':asian,
-        'other':other,
-        'child':child,
-        'adult':adult,
-        'senior':senior,
-        'time':time,
-        'seeds':seeds    
-    }
+
+    if request.POST:
+        data = dict(request.POST.items())
+        # remove csrf token here, altough we should use it to verify the request is legitemate and not for example a bot or DDOS
+        del data["csrfmiddlewaretoken"]
+
+    N = 0
+    model_type = 0
+    if data:
+        N = int(data.get("pop_size"))
+        model_type = int(data.get("model"))
+
+    filepath = "{}/log.csv".format(settings.MEDIA_ROOT)
+    generate_CSV(data, filepath)
+
     if model_type == 0:
-        si_data = simulate_si(parameters)
-        filepath = '{}/log.csv'.format(settings.MEDIA_ROOT)
-        generate_CSV(parameters,filepath)
-        data = {'data':si_data,'N':N}
-        template = 'covid19/si_result.html'
-        return render(request,template,data)
-    elif model_type == 1: 
-        sis_data = simulate_sis(parameters)
-        filepath = '{}/log.csv'.format(settings.MEDIA_ROOT)
-        generate_CSV(parameters,filepath)
-        data = {'data':sis_data,'N':N}
-        template = 'covid19/sis_result.html'
-        return render(request,template,data)
+        # SI model
+        model_data = simulate_si(data)
+        template = "covid19/si_result.html"
+    elif model_type == 1:
+        # SIS model
+        model_data = simulate_sis(data)
+        template = "covid19/sis_result.html"
     elif model_type == 2:
-        sir_data = simulate_sir(parameters)
-        filepath = '{}/log.csv'.format(settings.MEDIA_ROOT)
-        generate_CSV(parameters,filepath)
-        data = {'data':sir_data,'N':N}
-        template = 'covid19/sir_result.html'
-        return render(request,template,data)
+        # SIR model
+        model_data = simulate_sir(data)
+        template = "covid19/sir_result.html"
+
+    data = {"data": model_data, "N": N}
+
+    return render(request, template, data)
+
 
 def predictInfection(request):
-    n = int(request.POST.get('n'))
-    gender = int(request.POST.get('gender'))
-    ethnicity = int(request.POST.get('ethnicity'))
-    age = int(request.POST.get('age'))
-    age2 = int(request.POST.get('age2'))
+
+    if request.POST:
+        data = dict(request.POST.items())
+        # remove csrf token here, altough we should use it to verify the request is legitemate and not for example a bot or DDOS
+        del data["csrfmiddlewaretoken"]
+
     parameters = {
-        'N':n,
-        'gender':gender,
-        'ethnicity':ethnicity,
-        'target_age':age,
-        'source_age':age2,
-        'filepath': '{}/log.csv'.format(settings.MEDIA_ROOT)
+        "N": data.get("n"),
+        "gender": data.get("gender"),
+        "ethnicity": data.get("ethnicity"),
+        "target_age": data.get("age"),
+        "source_age": data.get("age2"),
+        "filepath": "{}/log.csv".format(settings.MEDIA_ROOT),
     }
     prediction = predict_infection(parameters)
-    data = {'pred':round(prediction,2)}
+
+    data = {"pred": round(prediction, 2)}
+
     return JsonResponse(data)
