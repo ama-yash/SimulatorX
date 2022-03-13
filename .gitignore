@@ -2,3 +2,5 @@
 *.pyc
 *.pyc
 *.pyc
+.idea/misc.xml
+.idea/SimulatorX.iml
