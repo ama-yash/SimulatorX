@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.http.response import JsonResponse
 from django.shortcuts import render
-
 from semi_auto.models import Population
 
 from .scripts.csv_generator import *
