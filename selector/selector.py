@@ -58,7 +58,7 @@ def load_susceptibility_matrix():
 
 
 def load_recovery_matrix():
-    return pd.read_csv("datasets/recovery_matrix.csv")
+    return pd.read_csv("datasets/recovery_matrix.csv",index_col=0)
 
 
 def get_susceptibility_matrix_index(age):
@@ -76,16 +76,16 @@ def get_recovery_rate(gender, age):
     nodes_recovery = load_recovery_matrix()
 
     if gender == 0:
-        column = "male"
+        column = "Male"
     elif gender == 1:
-        column = "female"
+        column = "Female"
 
     if age <= 19:
-        return nodes_recovery[column][0]
+        return nodes_recovery.loc[column][0]
     elif age >= 60:
-        return nodes_recovery[column][5]
+        return nodes_recovery.loc[column][5]
     else:
-        return nodes_recovery[column][(age // 10) - 1]
+        return nodes_recovery.loc[column][(age // 10) - 1]
 
 
 def infection_rate(nodeA, nodeB, G, dataframe):
