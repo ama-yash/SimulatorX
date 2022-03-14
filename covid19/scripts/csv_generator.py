@@ -56,8 +56,7 @@ def generate_CSV(parameters, filepath):
         "adult": parameters["adult"],
         "senior": parameters["senior"],
     }
-    graph = {"code": 1, "m": 2}
-    G = generateNodes(N, ethn, gen, ag, graph)
+    G = generateNodes(N, ethn, gen, ag, 0, 2)
 
     dframe = run(G, N, susceptibility_matrix)
 

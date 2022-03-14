@@ -5,7 +5,7 @@ import numpy as np
 from selector.selector import round_number
 
 
-def generateNodes(N, ethnicity, gender, age, graph):
+def generateNodes(N, ethnicity, gender, age, graph_code,m):
 
     N = int(N)
 
@@ -23,11 +23,11 @@ def generateNodes(N, ethnicity, gender, age, graph):
 
     # generate graph
 
-    if graph["code"] == 0:
+    if graph_code == 0:
         G = nx.Graph()
         G.add_nodes_from(np.arange(0, N))
-    elif graph["code"] == 1:
-        G = nx.barabasi_albert_graph(N, graph["m"])
+    elif graph_code == 1:
+        G = nx.barabasi_albert_graph(N, m)
 
     # set all nodes to susceptible
     nx.set_node_attributes(G, "S", "status")

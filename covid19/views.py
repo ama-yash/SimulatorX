@@ -2,13 +2,9 @@ from django.conf import settings
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from semi_auto.models import Population
-
 from .scripts.csv_generator import *
 from .scripts.infection_prediction import *
-from .scripts.si_covid import *
-from .scripts.sir_covid import *
-from .scripts.sis_covid import *
-
+from compartmental_models import Models
 
 def getIndex(request):
     area_names = Population.objects.raw(
@@ -30,21 +26,27 @@ def getResult(request):
     if data:
         N = int(data.get("pop_size"))
         model_type = int(data.get("model"))
-
+    data["graph_code"] = 0
+    data["m"] = 2
     filepath = "{}/log.csv".format(settings.MEDIA_ROOT)
     generate_CSV(data, filepath)
-
     if model_type == 0:
         # SI model
-        model_data = simulate_si(data)
+        #model_data = simulate_si(data)
+        model = Models(mode='covid',parameters=data)
+        model_data = model.si()
         template = "covid19/si_result.html"
     elif model_type == 1:
         # SIS model
-        model_data = simulate_sis(data)
+        #model_data = simulate_sis(data)
+        model = Models(mode='covid',parameters=data)
+        model_data = model.sis()
         template = "covid19/sis_result.html"
     elif model_type == 2:
         # SIR model
-        model_data = simulate_sir(data)
+        #model_data = simulate_sir(data)
+        model = Models(mode='covid',parameters=data)
+        model_data = model.sir()
         template = "covid19/sir_result.html"
 
     data = {"data": model_data, "N": N}

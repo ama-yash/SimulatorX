@@ -35,7 +35,7 @@ def load_data(filename, n):
             data_file
         ):  # enumerate adds a counter to an iterable and returns it
             data[i] = np.asarray(ir[:-1], dtype=np.float64)
-            target[i] = np.asarray(ir[-1], dtype=np.int)
+            target[i] = np.asarray(ir[-1], dtype=np.float)
 
     return data, target, target_names
 
