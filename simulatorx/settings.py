@@ -123,13 +123,13 @@ USE_TZ = True
 if DEBUG:
     MEDIA_URL = "/media/"
     STATIC_ROOT = os.path.join(
-        os.path.dirname(BASE_DIR), "simulatorx", "static", "static-only"
+        os.path.dirname(BASE_DIR), "SimulatorX", "static", "static-only"
     )
     MEDIA_ROOT = os.path.join(
-        os.path.dirname(BASE_DIR), "simulatorx", "static", "media"
+        os.path.dirname(BASE_DIR), "SimulatorX", "static", "media"
     )
     STATICFILES_DIRS = (
-        os.path.join(os.path.dirname(BASE_DIR), "simulatorx", "static", "static"),
+        os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "static", "static"),
     )
 
 # Static files (CSS, JavaScript, Images)
@@ -144,9 +144,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "/media/"
 STATIC_ROOT = os.path.join(
-    os.path.dirname(BASE_DIR), "simulatorx", "static", "static-only"
+    os.path.dirname(BASE_DIR), "SimulatorX", "static", "static-only"
 )
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "simulatorx", "static", "media")
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "static", "media")
 STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(BASE_DIR), "simulatorx", "static", "static"),
+    os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "static", "static"),
 )
