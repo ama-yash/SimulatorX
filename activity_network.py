@@ -1,5 +1,6 @@
-from selector.selector import activate_graph, power_law
 import random
+
+from selector.selector import activate_graph, power_law
 
 
 def generate_activity_network(G, N, neighbours_to_infect):

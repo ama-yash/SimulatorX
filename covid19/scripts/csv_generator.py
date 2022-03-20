@@ -2,8 +2,9 @@ import random
 
 import networkx as nx
 import pandas as pd
+
 from demographic_graph_generator import generate_nodes
-from selector.selector import load_susceptibility_matrix, get_infection_rate
+from selector.selector import get_infection_rate, load_susceptibility_matrix
 
 
 def generate_dataFrame():

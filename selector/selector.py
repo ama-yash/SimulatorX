@@ -1,4 +1,5 @@
 import random
+
 import pandas as pd
 
 
@@ -23,7 +24,7 @@ def partition(list_in, n):
 
 def seed_graph(G, seeds):
     nodes = G.number_of_nodes()
-    number_of_seeds = int(nodes * (int(seeds)/100))
+    number_of_seeds = int(nodes * (int(seeds) / 100))
     rand_nodes = random.sample(range(nodes), int(number_of_seeds))
     for n in range(0, nodes):
         if n in rand_nodes:
@@ -142,9 +143,7 @@ def infect(active_nodes, G, infection_rate=None):
                 if G.nodes[n]["status"] == "S":
                     if not infection_rate:
                         # use covid infection rates if None is set
-                        infection_rate = (
-                            get_infection_rate(n, neighbor, G) - 0.076
-                        )
+                        infection_rate = get_infection_rate(n, neighbor, G) - 0.076
                     if random.uniform(0, 1) < infection_rate:
                         G.nodes[n]["status"] = "I"
 

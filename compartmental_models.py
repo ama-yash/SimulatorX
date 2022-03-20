@@ -1,27 +1,48 @@
-from activity_network import generate_activity_network
-from selector.selector import seed_graph, infect, recover
-from count import count_compartament_data, count_attributes, count_data
 import networkx as nx
 
+from activity_network import generate_activity_network
+from count import count_attributes, count_compartament_data, count_data
+from selector.selector import infect, recover, seed_graph
+
 # constants
-SEEDS = 1 # percentage of seeds, by default 1%
-TIME = 100 # by default simulate for 100 timesteps
-NEIGHBOURS_TO_INFECT = 2 # default number of nodes to infect
+SEEDS = 1  # percentage of seeds, by default 1%
+TIME = 100  # by default simulate for 100 timesteps
+NEIGHBOURS_TO_INFECT = 2  # default number of nodes to infect
+
 
 def check_graph(G, is_activity_network, infection_rate):
     if is_activity_network and G.number_of_edges() > 0:
-        raise Exception("Activity network requires a graph without any edges. Please use G = nx.empty_graph(N) instead!")
+        raise Exception(
+            "Activity network requires a graph without any edges. Please use G = nx.empty_graph(N) instead!"
+        )
 
-    if not nx.get_node_attributes(G, "age") and not nx.get_node_attributes(G, "gender") and not nx.get_node_attributes(G, "ethnicity") and not infection_rate:
-        raise Exception('Age, gender and ethnicity have not been set in the graph. Please specify infection_rate!')
+    if (
+        not nx.get_node_attributes(G, "age")
+        and not nx.get_node_attributes(G, "gender")
+        and not nx.get_node_attributes(G, "ethnicity")
+        and not infection_rate
+    ):
+        raise Exception(
+            "Age, gender and ethnicity have not been set in the graph. Please specify infection_rate!"
+        )
 
-def si(G, infection_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME, neighbours_to_infect=NEIGHBOURS_TO_INFECT):
+
+def si(
+    G,
+    infection_rate=None,
+    is_activity_network=False,
+    seeds=SEEDS,
+    time=TIME,
+    neighbours_to_infect=NEIGHBOURS_TO_INFECT,
+):
     # network logic
     check_graph(G, is_activity_network, infection_rate)
 
-    nx.set_node_attributes(G, 'S', 'status')
+    nx.set_node_attributes(G, "S", "status")
     N = G.number_of_nodes()
-    seed_graph(G, seeds) # seed the graph based on inital number of infection within the given population
+    seed_graph(
+        G, seeds
+    )  # seed the graph based on inital number of infection within the given population
 
     sus = []
     inf = []
@@ -51,13 +72,23 @@ def si(G, infection_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME
     return model_data or (sus, inf)
 
 
-def sis(G, infection_rate=None, recovery_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME, neighbours_to_infect=NEIGHBOURS_TO_INFECT):
+def sis(
+    G,
+    infection_rate=None,
+    recovery_rate=None,
+    is_activity_network=False,
+    seeds=SEEDS,
+    time=TIME,
+    neighbours_to_infect=NEIGHBOURS_TO_INFECT,
+):
     # network logic
     check_graph(G, is_activity_network, infection_rate)
 
-    nx.set_node_attributes(G, 'S', 'status')
+    nx.set_node_attributes(G, "S", "status")
     N = G.number_of_nodes()
-    seed_graph(G, seeds)  # seed the graph based on inital number of infection within the given population
+    seed_graph(
+        G, seeds
+    )  # seed the graph based on inital number of infection within the given population
 
     sus = []
     inf = []
@@ -88,13 +119,23 @@ def sis(G, infection_rate=None, recovery_rate=None, is_activity_network=False, s
     return model_data or (sus, inf)
 
 
-def sir(G, infection_rate=None, recovery_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME, neighbours_to_infect=NEIGHBOURS_TO_INFECT):
+def sir(
+    G,
+    infection_rate=None,
+    recovery_rate=None,
+    is_activity_network=False,
+    seeds=SEEDS,
+    time=TIME,
+    neighbours_to_infect=NEIGHBOURS_TO_INFECT,
+):
     # network logic
     check_graph(G, is_activity_network, infection_rate)
 
-    nx.set_node_attributes(G, 'S', 'status')
+    nx.set_node_attributes(G, "S", "status")
     N = G.number_of_nodes()
-    seed_graph(G, seeds)  # seed the graph based on inital number of infection within the given population
+    seed_graph(
+        G, seeds
+    )  # seed the graph based on inital number of infection within the given population
 
     sus = []
     inf = []

@@ -2,6 +2,7 @@ import random
 
 import networkx as nx
 import numpy as np
+
 from selector.selector import round_number
 
 
@@ -15,7 +16,12 @@ def generate_nodes(G, ethnicity, gender, age):
     asian_population = round_number(N, ethnicity.get("asian"))
 
     # fix rounding error bug
-    total_population = [white_population, black_population, mixed_population, asian_population]
+    total_population = [
+        white_population,
+        black_population,
+        mixed_population,
+        asian_population,
+    ]
     if sum(total_population) < N:
         rounding_error = abs(N - sum(total_population))
         random_index = random.randint(0, len(total_population) - 1)

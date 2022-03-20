@@ -3,10 +3,11 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from networkx import barabasi_albert_graph
 
+from compartmental_models import si, sir, sis
 from semi_auto.models import Population
+
 from .scripts.csv_generator import *
 from .scripts.infection_prediction import *
-from compartmental_models import si, sis, sir
 
 
 def getIndex(request):
@@ -53,14 +54,18 @@ def getResult(request):
         # SIS model
 
         G = generate_nodes(G, ethnicity, gender, age)
-        model_data = sis(G, is_activity_network=is_activity_network, seeds=data["seeds"])
+        model_data = sis(
+            G, is_activity_network=is_activity_network, seeds=data["seeds"]
+        )
 
         template = "covid19/sis_result.html"
     elif model_type == 2:
         # SIR model
 
         G = generate_nodes(G, ethnicity, gender, age)
-        model_data = sir(G, is_activity_network=is_activity_network, seeds=data["seeds"])
+        model_data = sir(
+            G, is_activity_network=is_activity_network, seeds=data["seeds"]
+        )
 
         template = "covid19/sir_result.html"
 
