@@ -48,7 +48,7 @@ def si(G, infection_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME
             model_data = count_data(model_data, data)
 
     # if the model doesn't have any data return just the susceptible and infected lists
-    return model_data or sus, inf
+    return model_data or (sus, inf)
 
 
 def sis(G, infection_rate=None, recovery_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME, neighbours_to_infect=NEIGHBOURS_TO_INFECT):
@@ -85,7 +85,7 @@ def sis(G, infection_rate=None, recovery_rate=None, is_activity_network=False, s
             model_data = count_data(model_data, data)
 
     # if the model doesn't have any data return just the susceptible and infected lists
-    return model_data or sus, inf
+    return model_data or (sus, inf)
 
 
 def sir(G, infection_rate=None, recovery_rate=None, is_activity_network=False, seeds=SEEDS, time=TIME, neighbours_to_infect=NEIGHBOURS_TO_INFECT):
@@ -123,5 +123,5 @@ def sir(G, infection_rate=None, recovery_rate=None, is_activity_network=False, s
             data = count_attributes(G)
             model_data = count_data(model_data, data)
 
-    # if the model doesn't have any data return just the susceptible and infected lists
-    return model_data or sus, inf, rec
+    # if the model doesn't have any data return just the susceptible, infected and recovered lists
+    return model_data or (sus, inf, rec)
