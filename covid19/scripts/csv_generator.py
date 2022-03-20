@@ -1,19 +1,19 @@
 import random
 
+import networkx as nx
 import pandas as pd
-from covid_19_selectors import get_beta
-from genNode import generateNodes
-from selector.selector import load_susceptibility_matrix
+from demographic_graph_generator import generate_nodes
+from selector.selector import load_susceptibility_matrix, get_infection_rate
 
 
-def generate_DataFrame():
+def generate_dataFrame():
     return pd.DataFrame(
         columns=["Ethnicity", "Gender", "Target_Age", "Source_Age", "Beta_Class"]
     )
 
 
-def run(G, N, dataframe):
-    df = generate_DataFrame()
+def run(G, N):
+    df = generate_dataFrame()
     ethnicity_list = []
     gender_list = []
     node_i_age_list = []
@@ -21,15 +21,15 @@ def run(G, N, dataframe):
     beta_list = []
     for n in range(0, N):
         random_target = int(random.randint(0, N - 1))
-        node_j_age = G.nodes[random_target]["age"]
-        beta = get_beta(n, node_j_age, G, dataframe)
+        target_node = G.nodes[random_target]["age"]
+        beta = get_infection_rate(n, target_node, G)
         if beta < 0.2:
             beta = beta * 100
 
         ethnicity_list.append(G.nodes[n]["ethnicity"])
         gender_list.append(G.nodes[n]["gender"])
         node_i_age_list.append(G.nodes[n]["age"])
-        node_j_age_list.append(node_j_age)
+        node_j_age_list.append(target_node)
         beta_list.append(beta)
 
     df["Ethnicity"] = ethnicity_list
@@ -41,25 +41,29 @@ def run(G, N, dataframe):
     return df
 
 
-def generate_CSV(parameters, filepath):
+def generate_csv(parameters, filepath):
     N = int(parameters["pop_size"])
-    susceptibility_matrix = load_susceptibility_matrix()
-    ethn = {
+
+    ethnicity = {
         "white": parameters["white"],
         "black": parameters["black"],
         "asian": parameters["asian"],
         "other": parameters["other"],
     }
-    gen = {"male": parameters["male"], "female": parameters["female"]}
-    ag = {
+    gender = {"male": parameters["male"], "female": parameters["female"]}
+    age = {
         "child": parameters["child"],
         "adult": parameters["adult"],
         "senior": parameters["senior"],
     }
-    G = generateNodes(N, ethn, gen, ag, 0, 2)
+    G = nx.empty_graph(N)
 
-    dframe = run(G, N, susceptibility_matrix)
+    G = generate_nodes(G, ethnicity, gender, age)
 
-    dframe = dframe[["Ethnicity", "Gender", "Target_Age", "Source_Age", "Beta_Class"]]
+    df = run(G, N)
 
-    dframe.to_csv(filepath, index=False)
+    df = df[["Ethnicity", "Gender", "Target_Age", "Source_Age", "Beta_Class"]]
+
+    df.to_csv(filepath, index=False)
+
+    return age, gender, ethnicity
