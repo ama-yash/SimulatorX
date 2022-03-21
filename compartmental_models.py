@@ -1,175 +1,168 @@
-import random
-from count import count_all_si,count_all_sir
-from covid_19_selectors import infect as cov_inf, sis_recover as cov_sis_recover, sir_recover as cov_sir_recover
-from gen_simulation_tools import infect as gen_inf, recover_sir as gen_sir_recover, recover_sis as gen_sis_recover
-from gen_simulation_tools import init_si_counts, update_si_counts, init_sir_counts, update_sir_counts
-from genNode import generateNodes
-from selector.selector import (activate_graph, load_susceptibility_matrix,
-                               power_law, seed_graph)
+import networkx as nx
 
-class Models():
-    #initialise parameters, generate network, and preparing for simulation
-    def __init__(self, mode, parameters):
-        self.mode = mode
-        self.N = int(parameters["pop_size"])
-        ethn = {
-            "white": parameters["white"],
-            "black": parameters["black"],
-            "asian": parameters["asian"],
-            "other": parameters["other"],
-        }
-        gen = {"male": parameters["male"], "female": parameters["female"]}
-        ag = {
-            "child": parameters["child"],
-            "adult": parameters["adult"],
-            "senior": parameters["senior"],
-        }
-        self.seeds = float(parameters["seeds"])
-        self.time = int(parameters["time"])
-        self.graph_code = int(parameters["graph_code"])
-        self.m = int(parameters["m"])
-        self.G = generateNodes(self.N, ethn, gen, ag, self.graph_code, self.m)
-        if self.graph_code == 0:
-            epsilon = 0.001
-            gamma = -2.1
-            self.act = power_law(epsilon, 1, gamma, self.N)
-        if mode == 'manual':
-            self.infection_parameters = {
-                    "white": float(parameters["white_inf"]),
-                    "black": float(parameters["black_inf"]),
-                    "asian": float(parameters["asian_inf"]),
-                    "other": float(parameters["other_inf"]),
-                    "male": float(parameters["male_inf"]),
-                    "female": float(parameters["female_inf"]),
-                    "child": float(parameters["child_inf"]),
-                    "adult": float(parameters["adult_inf"]),
-                    "senior": float(parameters["senior_inf"]),
-                }
-            if parameters["model"] != 0:
-                self.recovery_parameters = {
-                    "white": float(parameters["white_rec"]),
-                    "black": float(parameters["black_rec"]),
-                    "asian": float(parameters["asian_rec"]),
-                    "other": float(parameters["other_rec"]),
-                    "male": float(parameters["male_rec"]),
-                    "female": float(parameters["female_rec"]),
-                    "child": float(parameters["child_rec"]),
-                    "adult": float(parameters["adult_rec"]),
-                    "senior": float(parameters["senior_rec"]),
-                }
+from activity_network import generate_activity_network
+from count import count_attributes, count_compartament_data, count_data
+from selector.selector import infect, recover, seed_graph
+
+# constants
+SEEDS = 1  # percentage of seeds, by default 1%
+TIME = 100  # by default simulate for 100 timesteps
+NEIGHBOURS_TO_INFECT = 2  # default number of nodes to infect
+
+
+def check_graph(G, is_activity_network, infection_rate):
+    if is_activity_network and G.number_of_edges() > 0:
+        raise Exception(
+            "Activity network requires a graph without any edges. Please use G = nx.empty_graph(N) instead!"
+        )
+
+    if (
+        not nx.get_node_attributes(G, "age")
+        and not nx.get_node_attributes(G, "gender")
+        and not nx.get_node_attributes(G, "ethnicity")
+        and not infection_rate
+    ):
+        raise Exception(
+            "Age, gender and ethnicity have not been set in the graph. Please specify infection_rate!"
+        )
+
+
+def si(
+    G,
+    infection_rate=None,
+    is_activity_network=False,
+    seeds=SEEDS,
+    time=TIME,
+    neighbours_to_infect=NEIGHBOURS_TO_INFECT,
+):
+    # network logic
+    check_graph(G, is_activity_network, infection_rate)
+
+    nx.set_node_attributes(G, "S", "status")
+    N = G.number_of_nodes()
+    seed_graph(
+        G, seeds
+    )  # seed the graph based on inital number of infection within the given population
+
+    sus = []
+    inf = []
+    model_data = None
+
+    if is_activity_network:
+        data = count_attributes(G)
+        model_data = {k: [] for k in list(data.keys())}
+
+    for t in range(time):
+        if is_activity_network:
+            G, active_nodes = generate_activity_network(G, N, neighbours_to_infect)
         else:
-            self.dataframe = load_susceptibility_matrix()
-    
-    #perform SI compartment model
-    def si(self):
-        count_dicts = init_si_counts()
-        seed_graph(self.G, self.seeds)     
-        if self.mode == 'manual':
-            for i in range(self.time):
-                if self.graph_code == 0:
-                    active_nodes = activate_graph(self.act, self.N)
-                    for i in active_nodes:
-                        count = 0
-                        while count < self.m:
-                            target = random.randint(0, self.N - 1)
-                            if target != i and target not in self.G.neighbors(i):
-                                self.G.add_edge(i, target)
-                                count += 1
-                else:
-                    active_nodes = self.G.nodes()
-                gen_inf(active_nodes, self.G, self.infection_parameters)
-                data = count_all_si(self.G)
-                count_dicts = update_si_counts(count_dicts, data)
-            return count_dicts
-        elif self.mode == 'covid':
-            for t in range(self.time):
-                active_nodes = activate_graph(self.act, self.N)
-                for i in active_nodes:
-                    count = 0
-                    while count < self.m:
-                        target = random.randint(0, self.N - 1)
-                        if target != i and target not in self.G.neighbors(i):
-                            self.G.add_edge(i, target)
-                            count += 1
-                cov_inf(active_nodes, self.G, self.dataframe)
-                data = count_all_si(self.G)
-                count_dicts = update_si_counts(count_dicts, data)
-            return count_dicts
-    
-    #perform SIS compartment model
-    def sis(self):
-        count_dicts = init_si_counts()
-        seed_graph(self.G, self.seeds)         
-        if self.mode == 'manual':
-            for i in range(self.time):
-                if self.graph_code == 0:
-                    active_nodes = activate_graph(self.act, self.N)
-                    for i in active_nodes:
-                        count = 0
-                        while count < self.m:
-                            target = random.randint(0, self.N - 1)
-                            if target != i and target not in self.G.neighbors(i):
-                                self.G.add_edge(i, target)
-                                count += 1
-                else:
-                    active_nodes = self.G.nodes()
-                gen_inf(active_nodes, self.G, self.infection_parameters)
-                gen_sis_recover(active_nodes,self.G,self.recovery_parameters)
-                data = count_all_si(self.G)
-                count_dicts = update_si_counts(count_dicts, data)
-            return count_dicts
-        elif self.mode == 'covid':
-            for t in range(self.time):
-                active_nodes = activate_graph(self.act, self.N)
-                for i in active_nodes:
-                    count = 0
-                    while count < self.m:
-                        target = random.randint(0, self.N - 1)
-                        if target != i and target not in self.G.neighbors(i):
-                            self.G.add_edge(i, target)
-                            count += 1
-                cov_inf(active_nodes, self.G, self.dataframe)
-                cov_sis_recover(active_nodes,self.G)
-                data = count_all_si(self.G)
-                count_dicts = update_si_counts(count_dicts, data)
-            return count_dicts
-    
-    #perform SIR compartment model
-    def sir(self):
-        count_dicts = init_sir_counts()
-        seed_graph(self.G, self.seeds) 
-        if self.mode == 'manual':
-            for i in range(self.time):
-                if self.graph_code == 0:
-                    active_nodes = activate_graph(self.act, self.N)
-                    for i in active_nodes:
-                        count = 0
-                        while count < self.m:
-                            target = random.randint(0, self.N - 1)
-                            if target != i and target not in self.G.neighbors(i):
-                                self.G.add_edge(i, target)
-                                count += 1
-                else:
-                    active_nodes = self.G.nodes()
-                gen_inf(active_nodes, self.G, self.infection_parameters)
-                gen_sir_recover(active_nodes,self.G,self.recovery_parameters)
-                data = count_all_sir(self.G)
-                count_dicts = update_sir_counts(count_dicts, data)
-            return count_dicts
-        elif self.mode == 'covid':
-            for t in range(self.time):
-                active_nodes = activate_graph(self.act, self.N)
-                for i in active_nodes:
-                    count = 0
-                    while count < self.m:
-                        target = random.randint(0, self.N - 1)
-                        if target != i and target not in self.G.neighbors(i):
-                            self.G.add_edge(i, target)
-                            count += 1
-                cov_inf(active_nodes, self.G, self.dataframe)
-                cov_sir_recover(active_nodes,self.G)
-                data = count_all_sir(self.G)
-                count_dicts = update_sir_counts(count_dicts, data)
-            return count_dicts
-        
-    #define additional models below
+            # if we are not using activity driven network all nodes are considered active
+            active_nodes = list(G.nodes)
+
+        # run the SI model
+        infect(active_nodes, G, infection_rate)
+        status_count = count_compartament_data(G)
+        sus.append(status_count.get("S", 0))
+        inf.append(status_count.get("I", 0))
+        if is_activity_network:
+            data = count_attributes(G)
+            model_data = count_data(model_data, data)
+
+    # if the model doesn't have any data return just the susceptible and infected lists
+    return model_data or (sus, inf)
+
+
+def sis(
+    G,
+    infection_rate=None,
+    recovery_rate=None,
+    is_activity_network=False,
+    seeds=SEEDS,
+    time=TIME,
+    neighbours_to_infect=NEIGHBOURS_TO_INFECT,
+):
+    # network logic
+    check_graph(G, is_activity_network, infection_rate)
+
+    nx.set_node_attributes(G, "S", "status")
+    N = G.number_of_nodes()
+    seed_graph(
+        G, seeds
+    )  # seed the graph based on inital number of infection within the given population
+
+    sus = []
+    inf = []
+    model_data = None
+
+    if is_activity_network:
+        data = count_attributes(G)
+        model_data = {k: [] for k in list(data.keys())}
+
+    for t in range(time):
+        if is_activity_network:
+            G, active_nodes = generate_activity_network(G, N, neighbours_to_infect)
+        else:
+            # if we are not using activity driven network all nodes are considered active
+            active_nodes = list(G.nodes)
+
+        # run the SI model
+        infect(active_nodes, G, infection_rate)
+        recover(active_nodes, G, recovery_rate)
+        status_count = count_compartament_data(G)
+        sus.append(status_count.get("S", 0))
+        inf.append(status_count.get("I", 0))
+        if is_activity_network:
+            data = count_attributes(G)
+            model_data = count_data(model_data, data)
+
+    # if the model doesn't have any data return just the susceptible and infected lists
+    return model_data or (sus, inf)
+
+
+def sir(
+    G,
+    infection_rate=None,
+    recovery_rate=None,
+    is_activity_network=False,
+    seeds=SEEDS,
+    time=TIME,
+    neighbours_to_infect=NEIGHBOURS_TO_INFECT,
+):
+    # network logic
+    check_graph(G, is_activity_network, infection_rate)
+
+    nx.set_node_attributes(G, "S", "status")
+    N = G.number_of_nodes()
+    seed_graph(
+        G, seeds
+    )  # seed the graph based on inital number of infection within the given population
+
+    sus = []
+    inf = []
+    rec = []
+    model_data = None
+
+    if is_activity_network:
+        data = count_attributes(G)
+        model_data = {k: [] for k in list(data.keys())}
+
+    for t in range(time):
+        if is_activity_network:
+            G, active_nodes = generate_activity_network(G, N, neighbours_to_infect)
+        else:
+            # if we are not using activity driven network all nodes are considered active
+            active_nodes = list(G.nodes)
+
+        # run the SI model
+        infect(active_nodes, G, infection_rate)
+        recover(active_nodes, G, recovery_rate, permanent_recovery=True)
+        status_count = count_compartament_data(G)
+        sus.append(status_count.get("S", 0))
+        inf.append(status_count.get("I", 0))
+        rec.append(status_count.get("R", 0))
+        if is_activity_network:
+            data = count_attributes(G)
+            model_data = count_data(model_data, data)
+
+    # if the model doesn't have any data return just the susceptible, infected and recovered lists
+    return model_data or (sus, inf, rec)

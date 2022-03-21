@@ -326,7 +326,7 @@
    }
 //--------------------------------------TOTAL INFECTION------------------------------------------
    function getTotalInfectionData(){
-      var inf = '{{data.inf_total}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var inf = '{{data.total_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
       var labels = [];
       for (i = 1; i <= inf.length; i++) {
          labels.push(i);
@@ -357,7 +357,7 @@
    );
 //---------------------------------------TOTAL SUSCEPTIBILITY------------------------------------------
 function getTotalSusData(){
-      var inf = '{{data.sus_total}}'.split(',').map(function(item){return parseInt(item, 10);});
+      var inf = '{{data.total_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
       var labels = [];
       for (i = 1; i <= inf.length; i++) {
          labels.push(i);

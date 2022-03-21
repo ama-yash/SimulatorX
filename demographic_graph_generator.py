@@ -2,17 +2,34 @@ import random
 
 import networkx as nx
 import numpy as np
+
 from selector.selector import round_number
 
 
-def generateNodes(N, ethnicity, gender, age, graph_code,m):
+def generate_nodes(G, ethnicity, gender, age):
 
-    N = int(N)
+    N = int(G.number_of_nodes())
 
     white_population = round_number(N, ethnicity.get("white"))
     black_population = round_number(N, ethnicity.get("black"))
     mixed_population = round_number(N, ethnicity.get("other"))
     asian_population = round_number(N, ethnicity.get("asian"))
+
+    # fix rounding error bug
+    total_population = [
+        white_population,
+        black_population,
+        mixed_population,
+        asian_population,
+    ]
+    if sum(total_population) < N:
+        rounding_error = abs(N - sum(total_population))
+        random_index = random.randint(0, len(total_population) - 1)
+        total_population[random_index] += rounding_error
+        white_population = total_population[0]
+        black_population = total_population[1]
+        mixed_population = total_population[2]
+        asian_population = total_population[3]
 
     male_population = round_number(N, gender.get("male"))
     female_population = round_number(N, gender.get("female"))
@@ -20,14 +37,6 @@ def generateNodes(N, ethnicity, gender, age, graph_code,m):
     youth_population = round_number(N, age.get("child"))
     adult_population = round_number(N, age.get("adult"))
     senior_population = round_number(N, age.get("senior"))
-
-    # generate graph
-
-    if graph_code == 0:
-        G = nx.Graph()
-        G.add_nodes_from(np.arange(0, N))
-    elif graph_code == 1:
-        G = nx.barabasi_albert_graph(N, m)
 
     # set all nodes to susceptible
     nx.set_node_attributes(G, "S", "status")

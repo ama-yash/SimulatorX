@@ -1,101 +1,82 @@
+from collections import Counter
+
 import networkx as nx
-def count_all_si(G):
-    status = nx.get_node_attributes(G,'status')
-    ethnicity = nx.get_node_attributes(G,'ethnicity')
-    gender = nx.get_node_attributes(G,'gender')
-    age = nx.get_node_attributes(G,'age')
+import pandas as pd
 
-    inf_nodes = [key for key in status.keys() if status[key] == 'I']
-    sus_nodes = [key for key in status.keys() if status[key] == 'S']
-    
-    white_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 0]
-    black_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 1]
-    asian_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 2]
-    other_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 3]
 
-    male_nodes = [key for key in gender.keys() if gender[key] == 0]
-    female_nodes = [key for key in gender.keys() if gender[key] == 1]
+def count_compartament_data(G):
+    graph_attributes = nx.get_node_attributes(G, "status")
+    status_counts = Counter(graph_attributes.values())
+    return status_counts  # return the number of susceptible and infected
 
-    child_nodes = [key for key in age.keys() if age[key] >= 0 and age[key] <= 14]
-    adult_nodes = [key for key in age.keys() if age[key] >= 15 and age[key] <= 54]
-    senior_nodes = [key for key in age.keys() if age[key] >= 55 and age[key] <= 110]
 
-    data = {
-        "total_inf": len(inf_nodes),
-        "total_sus": len(sus_nodes),
-        "white_inf": len(list(set(inf_nodes) & set(white_nodes))),
-        "white_sus": len(list(set(sus_nodes) & set(white_nodes))),
-        "black_inf": len(list(set(inf_nodes) & set(black_nodes))),
-        "black_sus": len(list(set(sus_nodes) & set(black_nodes))),
-        "asian_inf": len(list(set(inf_nodes) & set(asian_nodes))),
-        "asian_sus": len(list(set(sus_nodes) & set(asian_nodes))),
-        "other_inf": len(list(set(inf_nodes) & set(other_nodes))),
-        "other_sus": len(list(set(sus_nodes) & set(other_nodes))),
-        "male_sus": len(list(set(sus_nodes) & set(male_nodes))),
-        "male_inf": len(list(set(inf_nodes) & set(male_nodes))),
-        "female_sus": len(list(set(sus_nodes) & set(female_nodes))),
-        "female_inf": len(list(set(inf_nodes) & set(female_nodes))),
-        "child_inf": len(list(set(inf_nodes) & set(child_nodes))),
-        "child_sus": len(list(set(sus_nodes) & set(child_nodes))),
-        "adult_inf": len(list(set(inf_nodes) & set(adult_nodes))),
-        "adult_sus": len(list(set(sus_nodes) & set(adult_nodes))),
-        "senior_inf": len(list(set(inf_nodes) & set(senior_nodes))),
-        "senior_sus": len(list(set(sus_nodes) & set(senior_nodes))),
-    }
-    return data
+def count_attributes(G):
 
-def count_all_sir(G):
-    status = nx.get_node_attributes(G,'status')
-    ethnicity = nx.get_node_attributes(G,'ethnicity')
-    gender = nx.get_node_attributes(G,'gender')
-    age = nx.get_node_attributes(G,'age')
+    dod = {}  # dict of dicts
+    for node in G.nodes:
+        dod[node] = G.nodes[node]
 
-    inf_nodes = [key for key in status.keys() if status[key] == 'I']
-    sus_nodes = [key for key in status.keys() if status[key] == 'S']
-    rec_nodes = [key for key in status.keys() if status[key] == 'R']
+    df = pd.DataFrame(dod).transpose()  # swap rows and columns
 
-    white_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 0]
-    black_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 1]
-    asian_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 2]
-    other_nodes = [key for key in ethnicity.keys() if ethnicity[key] == 3]
+    """
+        Ethnicity
+        # 0 - white_population
+        # 1 - black_population
+        # 2 - mixed_population
+        # 3 - asian_population
+    """
 
-    male_nodes = [key for key in gender.keys() if gender[key] == 0]
-    female_nodes = [key for key in gender.keys() if gender[key] == 1]
+    """
+        Gender
+        # 0 - male_population
+        # 1 - female_population
+    """
 
-    child_nodes = [key for key in age.keys() if age[key] >= 0 and age[key] <= 14]
-    adult_nodes = [key for key in age.keys() if age[key] >= 15 and age[key] <= 54]
-    senior_nodes = [key for key in age.keys() if age[key] >= 55 and age[key] <= 110]
+    """
+        Age 
+        youth 1 < age < 14,
+        adult 15 < age < 54,
+        senior 55 < age < 110
+    """
 
     data = {
-        "total_inf": len(inf_nodes),
-        "total_sus": len(sus_nodes),
-        "total_rec": len(rec_nodes),
-        "white_inf": len(list(set(inf_nodes) & set(white_nodes))),
-        "white_sus": len(list(set(sus_nodes) & set(white_nodes))),
-        "white_rec": len(list(set(rec_nodes) & set(white_nodes))),
-        "black_inf": len(list(set(inf_nodes) & set(black_nodes))),
-        "black_sus": len(list(set(sus_nodes) & set(black_nodes))),
-        "black_rec": len(list(set(rec_nodes) & set(black_nodes))),
-        "asian_inf": len(list(set(inf_nodes) & set(asian_nodes))),
-        "asian_sus": len(list(set(sus_nodes) & set(asian_nodes))),
-        "asian_rec": len(list(set(rec_nodes) & set(asian_nodes))),
-        "other_inf": len(list(set(inf_nodes) & set(other_nodes))),
-        "other_sus": len(list(set(sus_nodes) & set(other_nodes))),
-        "other_rec": len(list(set(rec_nodes) & set(other_nodes))),
-        "male_sus": len(list(set(sus_nodes) & set(male_nodes))),
-        "male_inf": len(list(set(inf_nodes) & set(male_nodes))),
-        "male_rec": len(list(set(rec_nodes) & set(male_nodes))),
-        "female_sus": len(list(set(sus_nodes) & set(female_nodes))),
-        "female_inf": len(list(set(inf_nodes) & set(female_nodes))),
-        "female_rec": len(list(set(rec_nodes) & set(female_nodes))),
-        "child_inf": len(list(set(inf_nodes) & set(child_nodes))),
-        "child_sus": len(list(set(sus_nodes) & set(child_nodes))),
-        "child_rec": len(list(set(rec_nodes) & set(child_nodes))),
-        "adult_inf": len(list(set(inf_nodes) & set(adult_nodes))),
-        "adult_sus": len(list(set(sus_nodes) & set(adult_nodes))),
-        "adult_rec": len(list(set(rec_nodes) & set(adult_nodes))),
-        "senior_inf": len(list(set(inf_nodes) & set(senior_nodes))),
-        "senior_sus": len(list(set(sus_nodes) & set(senior_nodes))),
-        "senior_rec": len(list(set(rec_nodes) & set(senior_nodes)))
+        "total_inf": len(df.query("status == 'I'")),
+        "total_sus": len(df.query("status == 'S'")),
+        "total_rec": len(df.query("status == 'R'")),
+        "white_inf": len(df.query("status == 'I' and ethnicity == 0")),
+        "white_sus": len(df.query("status == 'S' and ethnicity == 0")),
+        "white_rec": len(df.query("status == 'R' and ethnicity == 0")),
+        "black_inf": len(df.query("status == 'I' and ethnicity == 1")),
+        "black_sus": len(df.query("status == 'S' and ethnicity == 1")),
+        "black_rec": len(df.query("status == 'R' and ethnicity == 1")),
+        "other_inf": len(df.query("status == 'I' and ethnicity == 2")),
+        "other_sus": len(df.query("status == 'S' and ethnicity == 2")),
+        "other_rec": len(df.query("status == 'R' and ethnicity == 2")),
+        "asian_inf": len(df.query("status == 'I' and ethnicity == 3")),
+        "asian_sus": len(df.query("status == 'S' and ethnicity == 3")),
+        "asian_rec": len(df.query("status == 'R' and ethnicity == 3")),
+        "male_sus": len(df.query("status == 'S' and gender == 0")),
+        "male_inf": len(df.query("status == 'I' and gender == 0")),
+        "male_rec": len(df.query("status == 'R' and gender == 0")),
+        "female_sus": len(df.query("status == 'S' and gender == 1")),
+        "female_inf": len(df.query("status == 'I' and gender == 1")),
+        "female_rec": len(df.query("status == 'R' and gender == 1")),
+        "child_inf": len(df.query("status == 'I' and 1 < age < 14")),
+        "child_sus": len(df.query("status == 'S' and 1 < age < 14")),
+        "child_rec": len(df.query("status == 'R' and 1 < age < 14")),
+        "adult_inf": len(df.query("status == 'I' and 15 < age < 54")),
+        "adult_sus": len(df.query("status == 'S' and 15 < age < 54")),
+        "adult_rec": len(df.query("status == 'R' and 15 < age < 54")),
+        "senior_inf": len(df.query("status == 'I' and 55 < age < 110")),
+        "senior_sus": len(df.query("status == 'S' and 55 < age < 110")),
+        "senior_rec": len(df.query("status == 'R' and 55 < age < 110")),
     }
+
     return data
+
+
+def count_data(model_data, data):
+    for key, value in data.items():
+        model_data[key].append(value)
+
+    return model_data
