@@ -3,14 +3,15 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 
 from semi_auto.models import Population
-
+import pandas as pd
 
 def getIndex(request):
-    area_names = Population.objects.raw(
-        "select id,area_name from semi_auto_population;"
-    )
+    template = "man_sim/index.html"
+    data = pd.read_csv('datasets/demography.csv',index_col=0)
+
+    area_names = list(data.index)
     data = {"dobj": area_names}
-    return render(request, "man_sim/index.html", data)
+    return render(request, template, data)
 
 
 def getResult(request):
