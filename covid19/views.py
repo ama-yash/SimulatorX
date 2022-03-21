@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from networkx import barabasi_albert_graph
-
+import pandas as pd
 from compartmental_models import si, sir, sis
 from semi_auto.models import Population
 
@@ -11,12 +11,11 @@ from .scripts.infection_prediction import *
 
 
 def getIndex(request):
-    area_names = Population.objects.raw(
-        "select id,area_name from semi_auto_population;"
-    )
+    template = "covid19/index.html"
+    data = pd.read_csv('datasets/demography.csv',index_col=0)
+    area_names = list(data.index)
     data = {"dobj": area_names}
-    return render(request, "covid19/index.html", data)
-
+    return render(request, template, data)
 
 def getResult(request):
 
