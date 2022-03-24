@@ -130,6 +130,7 @@ if DEBUG:
     )
     STATICFILES_DIRS = (
         os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "static", "static"),
+        os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "Templates", "includes", "static"),
     )
 
 # Static files (CSS, JavaScript, Images)
@@ -149,4 +150,5 @@ STATIC_ROOT = os.path.join(
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "static", "media")
 STATICFILES_DIRS = (
     os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "static", "static"),
+    os.path.join(os.path.dirname(BASE_DIR), "SimulatorX", "Templates", "includes", "static"),
 )

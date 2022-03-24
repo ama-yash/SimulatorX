@@ -1,753 +1,661 @@
 {% include 'common/header.html' %}
-<div class="page-body-wrapper horizontal-menu"  style='padding-right: 0px'>
-<div class="page-body" style="margin-left: 10px;">
-<div class="container-fluid">
-   <div class="row">
-      <div class="col-sm-3">
-         <h2>Manual Simulation</h2>
-         <br>
-         <table style="width:450px;">
-            <tr>
-               <td style ='width:500px;height:30px;'>
-                  <button class='btn btn-success' id='man-but' onclick="switchManual()" type='button'>Create Manual Nodes</button>
-               </td>
-               <td style ='width:500px;height:30px;'>
-                  <button width='300px' class='btn btn-light' id='fac-but' onclick="switchFacial()" type='button'>Use Facial Recognition</button>
-               </td>
-            </tr>
-         </table>
-         <br>
-         <div class="card" id='fac-card' style='display: none;'>
-            <div class="card-header pb-0">
-               <h5>Select Images</h5>
-            </div>
-            <form method='POST' name='my_form' id='my_form' enctype="multipart/form-data">{% csrf_token %}
-               <div class="card-body">
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label">Upload File</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id='images' name='images' type="file" multiple>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <button type='button' onclick="uploadImages()" class="btn btn-primary">Upload</button>
-                  </div>
-                  <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='upload_alert' role="alert">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line></svg>
-                     <p id='upload_alert'>Population size must not be NULL.</p>
-                     </div>
-                  <div class="alert alert-dark dark alert-dismissible fade show" id='alertbox' style="display: none;" role="alert"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12" y2="16"></line></svg>
-                     <p> Please wait while we proceed.</p>
-                   </div>
-                   <h3 style="display: none;" id='msg'>EXTRACTED DATA:</h3>
-                   <h5 style="display: block;" id='fr_n'></h5>
-                   <h5 style="display: block;" id='fr_white'></h5>
-                   <h5 style="display: block;" id='fr_black'></h5>
-                   <h5 style="display: block;" id='fr_asian'></h5>
-                   <h5 style="display: block;" id='fr_other'></h5>
-                   <h5 style="display: block;" id='fr_male'></h5>
-                   <h5 style="display: block;" id='fr_female'></h5>
-                   <h5 style="display: block;" id='fr_child'></h5>
-                   <h5 style="display: block;" id='fr_adult'></h5>
-                   <h5 style="display: block;" id='fr_senior'></h5>
-               </div>
-            </form>
-         </div>
-         <div class="card" id='pop-card'>
-            <form class="theme-form" onsubmit="return validateFormExt()" action="/manual-simulation/result" enctype="multipart/form-data" method="POST" name='myForm' id='myForm'>
-               {% csrf_token %}         
-            <div class="card-header pb-0">
-               <h5>Population Characteristics</h5>
-            </div>
-            <div class="card-body">
-                  <div class="mb-3 row">
-                     <div class="mb-3 row" id=reg-card style="display: none;">
-                        <label class="col-form-label col-sm-3 pt-0"for='region'>Select Region</label>
-                        <select class="form-select btn-pill digits" onchange="getDemographyData()" id="region" name='region'>
-                            <option value=0>-----Select Area-----</option>
-                            {% for d in dobj %}
-                            <option value="{{d}}">{{d}}</option>
-                            {% endfor %}
-                        </select>
-                     </div>
-                     <label class="col-sm-3 col-form-label" style='width:160px'>Population Size (N)</label>
-                     <br>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="pop_size" onclick="hideMyAlert('pop_size_alert')" name='pop_size' type="text" placeholder="100-20000">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='pop_size_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='pop_size_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <h6>Gender Distribution (in %):</h6>
-                  <div class="mb-3 row">
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="male">Male</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="male" name='male' onclick="hideMyAlert('male_alert')" type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='male_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='male_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="female">Female</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="female" onclick="hideMyAlert('female_alert')" name="female" type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='female_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='female_alert'>Population size must not be NULL.</p>
-                     </div>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='gender_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='gender_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <h6>Ethnicity Distribution (in %):</h6>
-                  <div class="mb-3 row">
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="white">White</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="white" onclick="hideMyAlert('white_alert')" name='white' type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='white_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='white_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="black">Black</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="black" onclick="hideMyAlert('black_alert')" name='black' type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='black_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='black_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="asian">Asian</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="asian" onclick="hideMyAlert('asian_alert')" name='asian' type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='asian_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='asian_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="other">Other</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="other" name='other' onclick="hideMyAlert('other_alert')" type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='other_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='other_alert'>Population size must not be NULL.</p>
-                     </div>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='ethnicity_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='ethnicity_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <h6>Age Distribution (in %):</h6>
-                  <div class="mb-3 row">
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="child">Children (0-14)</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="child" name='child' onclick="hideMyAlert('child_alert')" type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='child_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='child_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="adult">Adult (15-54)</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="adult" onclick="hideMyAlert('adult_alert')" name='adult' type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='adult_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='adult_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="senior">Senior (55+)</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="senior" name='senior' type="text" onclick="hideMyAlert('senior_alert')" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='senior_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='senior_alert'>Population size must not be NULL.</p>
-                     </div>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='age_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='age_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-            </div>
-         </div>
-      </div>
-      <div class="col-sm-3">
-         <br>
-         <br>
-         <br>
-         <button class='btn btn-light' id='reg-but' style="top:5px;left:-7px;position: relative;" onclick="switchRegional()" type='button'>Region-based Nodes</button>
-         <div class="card" style='top:26px' name='model'>
-            <div class="card-header pb-0">
-               <h5>Model Characteristics</h5>
-            </div>
-            <div class="card-body">
-                  <fieldset class="mb-3">
-                     <div class="row">
-                        <label class="col-form-label col-sm-3 pt-0">Model Type</label>
-                        <div class="col-sm-9">
-                           <div class="form-check radio radio-primary">
-                              <input class="form-check-input" onchange="hideRecoveryParameters()" id="si_model" type="radio" name="model" value="0">
-                              <label class="form-check-label" for="si_model">SI (Susceptible-Infected)</label>
-                           </div>
-                           <div class="form-check radio radio-primary">
-                              <input class="form-check-input" onchange="showRecoveryParameters()" checked id="sis_model" type="radio" name="model" value="1">
-                              <label class="form-check-label" for="sis_model">SIS (Susceptible-Infected-Susceptible)</label>
-                           </div>
-                           <div class="form-check radio radio-primary">
-                              <input class="form-check-input" onchange="showRecoveryParameters()" id="sir_model" type="radio" name="model" value="2">
-                              <label class="form-check-label" for="sir_model">SIR (Susceptible-Infected-Removed)</label>
-                           </div>
+{% load static %}
+
+{% block head-js %}
+<script src="{% static 'js/common.js' %}"></script>
+{% endblock %}
+
+<div class="page-body-wrapper horizontal-menu" style='padding-right: 0px'>
+    <div class="page-body" style="margin-left: 10px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>Manual Simulation</h2>
+                    <br>
+                    <table style="width:450px;">
+                        <tr>
+                            <td style='width:500px;height:30px;'>
+                                <button class='btn btn-success' id='man-but' onclick="switchManual()" type='button'>
+                                    Create Manual Nodes
+                                </button>
+                            </td>
+                            <td style='width:500px;height:30px;'>
+                                <button width='300px' class='btn btn-light' id='fac-but' onclick="switchFacial()"
+                                        type='button'>Use Facial Recognition
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <div class="card" id='fac-card' style='display: none;'>
+                        <div class="card-header pb-0">
+                            <h5>Select Images</h5>
                         </div>
-                     </div>
-                  </fieldset>
-                  <div class="mb-3 row">
-                     <label class="col-form-label col-sm-3 pt-0"for='graph'>Select Graph</label>
-                     <select class="form-select btn-pill digits" onchange="switchGraph()" id="graph" name='graph_code'>
-                        <option default='true' value=0>Activity Network</option>
-                        <option value=1>Barabasi-Albert Model</option>
-                     </select>
-                  </div>
-                  <div class="mb-3 row" id=conn style = 'display: none;'>
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="m">No. of Connections (m)</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="m" name='m' type="text" placeholder="1-10">
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="time">Time (in Days)</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="time" onclick="hideMyAlert('time_alert')" name='time' type="text" placeholder="10-500">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='time_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='time_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <br>
-                     <label class="col-sm-3 col-form-label" for="seeds">Seeds (in %)</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="seeds" onclick="hideMyAlert('seeds_alert')" name='seeds' type="text" placeholder="0-100">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='seeds_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='seeds_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
+                        <form method='POST' name='my_form' id='my_form' enctype="multipart/form-data">{% csrf_token %}
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label class="col-sm-3 col-form-label">Upload File</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id='images' name='images' type="file" multiple>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <button type='button' onclick="uploadImages()" class="btn btn-primary">Upload
+                                    </button>
+                                </div>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='upload_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='upload_alert'>Population size must not be NULL.</p>
+                                </div>
+                                <div class="alert alert-dark dark alert-dismissible fade show" id='alertbox'
+                                     style="display: none;" role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-circle">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12" y2="16"></line>
+                                    </svg>
+                                    <p> Please wait while we proceed.</p>
+                                </div>
+                                <h3 style="display: none;" id='msg'>EXTRACTED DATA:</h3>
+                                <h5 style="display: block;" id='fr_n'></h5>
+                                <h5 style="display: block;" id='fr_white'></h5>
+                                <h5 style="display: block;" id='fr_black'></h5>
+                                <h5 style="display: block;" id='fr_asian'></h5>
+                                <h5 style="display: block;" id='fr_other'></h5>
+                                <h5 style="display: block;" id='fr_male'></h5>
+                                <h5 style="display: block;" id='fr_female'></h5>
+                                <h5 style="display: block;" id='fr_child'></h5>
+                                <h5 style="display: block;" id='fr_adult'></h5>
+                                <h5 style="display: block;" id='fr_senior'></h5>
+                            </div>
+                        </form>
+                    </div>
+                    {# add region based network form#}
+                    {% include "includes/region_based_network_form.html" %}
+                </div>
+                <div class="col-sm-3">
+                    <br>
+                    <br>
+                    <br>
+                    <button class='btn btn-light' id='reg-but' style="top:5px;left:-7px;position: relative;"
+                            onclick="switchRegional()" type='button'>Region-based Nodes
+                    </button>
+                    <div class="card" style='top:26px' name='model'>
+                        <div class="card-header pb-0">
+                            <h5>Model Characteristics</h5>
+                        </div>
+                        <div class="card-body">
+                            <fieldset class="mb-3">
+                                <div class="row">
+                                    <label class="col-form-label col-sm-3 pt-0">Model Type</label>
+                                    <div class="col-sm-9">
+                                        <div class="form-check radio radio-primary">
+                                            <input class="form-check-input" onchange="hideRecoveryParameters()"
+                                                   id="si_model" type="radio" name="model" value="0">
+                                            <label class="form-check-label" for="si_model">SI
+                                                (Susceptible-Infected)</label>
+                                        </div>
+                                        <div class="form-check radio radio-primary">
+                                            <input class="form-check-input" onchange="showRecoveryParameters()" checked
+                                                   id="sis_model" type="radio" name="model" value="1">
+                                            <label class="form-check-label" for="sis_model">SIS
+                                                (Susceptible-Infected-Susceptible)</label>
+                                        </div>
+                                        <div class="form-check radio radio-primary">
+                                            <input class="form-check-input" onchange="showRecoveryParameters()"
+                                                   id="sir_model" type="radio" name="model" value="2">
+                                            <label class="form-check-label" for="sir_model">SIR
+                                                (Susceptible-Infected-Removed)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-sm-3 pt-0" for='graph'>Select Graph</label>
+                                <select class="form-select btn-pill digits" onchange="switchGraph()" id="graph"
+                                        name='graph_code'>
+                                    <option default='true' value=0>Activity Network</option>
+                                    <option value=1>Barabasi-Albert Model</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 row" id=conn style='display: none;'>
+                                <br>
+                                <label class="col-sm-3 col-form-label" for="m">No. of Connections (m)</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="m" name='m' type="text" placeholder="1-10">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <br>
+                                <label class="col-sm-3 col-form-label" for="time">Time (in Days)</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="time" onclick="hideMyAlert('time_alert')"
+                                           name='time' type="text" placeholder="10-500">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='time_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='time_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <br>
+                                <label class="col-sm-3 col-form-label" for="seeds">Seeds (in %)</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="seeds" onclick="hideMyAlert('seeds_alert')"
+                                           name='seeds' type="text" placeholder="0-100">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='seeds_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='seeds_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card" style='top:123px' name='model'>
+                        <div class="card-header pb-0">
+                            <h5>Infection Parameters</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Infection Rates for Ethnicity:</h6>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="white_inf">White</label>
+                                <div class="col-sm-9">
+                                    <input width=25 class="form-control" onclick="hideMyAlert('white_inf_alert')"
+                                           id="white_inf" name='white_inf' type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='white_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='white_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="black_inf">Black</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="black_inf" onclick="hideMyAlert('black_inf_alert')"
+                                           name='black_inf' type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='black_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='black_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="asian_inf">Asian</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="asian_inf" onclick="hideMyAlert('asian_inf_alert')"
+                                           name='asian_inf' type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='asian_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='asian_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="other_inf">Other</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="other_inf" onclick="hideMyAlert('other_inf_alert')"
+                                           name='other_inf' type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='other_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='other_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <h6>Infection Rates for Gender:</h6>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="male_inf">Male</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="male_inf" name='male_inf'
+                                           onclick="hideMyAlert('male_inf_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='male_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='male_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="female_inf">Female</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="female_inf"
+                                           onclick="hideMyAlert('female_inf_alert')" name='female_inf' type="text"
+                                           placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='female_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='female_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <h6>Infection Rates for Age Groups:</h6>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="child_inf">Child</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="child_inf" name='child_inf'
+                                           onclick="hideMyAlert('child_inf_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='child_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='child_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="adult_inf">Adult</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="adult_inf" name='adult_inf'
+                                           onclick="hideMyAlert('adult_inf_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='adult_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='adult_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="senior_inf">Senior</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="senior_inf" name='senior_inf'
+                                           onclick="hideMyAlert('senior_inf_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='senior_inf_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='senior_inf_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3" id='rec-card'>
+                    <div class="card" style='top:123px' name='recovery'>
+                        <div class="card-header pb-0">
+                            <h5>Recovery Parameters</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Recovery Rates for Ethnicity:</h6>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="white_rec">White</label>
+                                <div class="col-sm-9">
+                                    <input width=25 class="form-control" id="white_rec" name='white_rec'
+                                           onclick="hideMyAlert('white_rec_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='white_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='white_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="black_rec">Black</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="black_rec" name='black_rec'
+                                           onclick="hideMyAlert('black_rec_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='black_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='black_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="asian_rec">Asian</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="asian_rec" onclick="hideMyAlert('asian_rec_alert')"
+                                           name='asian_rec' type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='asian_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='asian_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="other_rec">Other</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="other_rec" onclick="hideMyAlert('other_rec_alert')"
+                                           name='other_rec' type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='other_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='other_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <h6>Recovery Rates for Gender:</h6>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="male_rec">Male</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="male_rec" name="male_rec"
+                                           onclick="hideMyAlert('male_rec_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='male_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='male_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="female_rec">Female</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="female_rec" name="female_rec"
+                                           onclick="hideMyAlert('female_rec_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='female_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='female_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <h6>Recovery Rates for Age Groups:</h6>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="child_rec">Child</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" onclick="hideMyAlert('child_rec_alert')" id="child_rec"
+                                           name="child_rec" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='child_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='child_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="adult_rec">Adult</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="adult_rec" name="adult_rec"
+                                           onclick="hideMyAlert('adult_rec_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='adult_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='adult_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="senior_rec">Senior</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="senior_rec" name="senior_rec"
+                                           onclick="hideMyAlert('senior_rec_alert')" type="text" placeholder="0-1">
+                                </div>
+                                <br>
+                                <br>
+                                <div class="alert alert-danger outline alert-dismissible fade show"
+                                     style='display: none;' name='senior_rec_alert' role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <p id='senior_rec_alert'>Population size must not be NULL.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <button type='submit' class="btn btn-primary">Start Simulation</button>
+                        <button class="btn btn-secondary">Reset Values</button>
+                        <br>
+                        <br>
+                    </div>
+                    </form>
+                </div>
             </div>
-         </div>
-      </div>
-      <div class="col-sm-3">
-         <div class="card" style='top:123px' name='model'>
-            <div class="card-header pb-0">
-               <h5>Infection Parameters</h5>
-            </div>
-            <div class="card-body">
-                  <h6>Infection Rates for Ethnicity:</h6>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="white_inf">White</label>
-                     <div class="col-sm-9">
-                        <input width=25 class="form-control" onclick="hideMyAlert('white_inf_alert')" id="white_inf" name='white_inf' type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='white_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='white_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="black_inf">Black</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="black_inf" onclick="hideMyAlert('black_inf_alert')" name='black_inf' type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='black_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='black_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="asian_inf">Asian</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="asian_inf" onclick="hideMyAlert('asian_inf_alert')" name='asian_inf' type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='asian_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='asian_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="other_inf">Other</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="other_inf" onclick="hideMyAlert('other_inf_alert')" name='other_inf' type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='other_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='other_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <h6>Infection Rates for Gender:</h6>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="male_inf">Male</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="male_inf" name='male_inf' onclick="hideMyAlert('male_inf_alert')" type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='male_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='male_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="female_inf">Female</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="female_inf" onclick="hideMyAlert('female_inf_alert')" name='female_inf' type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='female_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='female_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <h6>Infection Rates for Age Groups:</h6>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="child_inf">Child</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="child_inf" name='child_inf' onclick="hideMyAlert('child_inf_alert')" type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='child_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='child_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="adult_inf">Adult</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="adult_inf" name='adult_inf' onclick="hideMyAlert('adult_inf_alert')" type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='adult_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='adult_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-                  <div class="mb-3 row">
-                     <label class="col-sm-3 col-form-label" for="senior_inf">Senior</label>
-                     <div class="col-sm-9">
-                        <input class="form-control" id="senior_inf" name='senior_inf' onclick="hideMyAlert('senior_inf_alert')" type="text" placeholder="0-1">
-                     </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='senior_inf_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='senior_inf_alert'>Population size must not be NULL.</p>
-                     </div>
-                  </div>
-            </div>
-         </div>
-      </div>
-      <div class="col-sm-3" id='rec-card'>
-        <div class="card" style='top:123px' name='recovery'>
-           <div class="card-header pb-0">
-              <h5>Recovery Parameters</h5>
-           </div>
-           <div class="card-body">
-                 <h6>Recovery Rates for Ethnicity:</h6>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="white_rec">White</label>
-                    <div class="col-sm-9">
-                       <input width=25 class="form-control" id="white_rec" name='white_rec' onclick="hideMyAlert('white_rec_alert')" type="text" placeholder="0-1">
-                    </div>
-                     <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='white_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='white_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="black_rec">Black</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="black_rec" name='black_rec' onclick="hideMyAlert('black_rec_alert')" type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='black_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='black_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="asian_rec">Asian</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="asian_rec" onclick="hideMyAlert('asian_rec_alert')" name='asian_rec' type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='asian_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='asian_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="other_rec">Other</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="other_rec" onclick="hideMyAlert('other_rec_alert')" name='other_rec' type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='other_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='other_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <h6>Recovery Rates for Gender:</h6>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="male_rec">Male</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="male_rec" name="male_rec" onclick="hideMyAlert('male_rec_alert')" type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='male_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='male_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="female_rec">Female</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="female_rec" name="female_rec" onclick="hideMyAlert('female_rec_alert')" type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='female_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='female_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <h6>Recovery Rates for Age Groups:</h6>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="child_rec">Child</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" onclick="hideMyAlert('child_rec_alert')" id="child_rec" name="child_rec" type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='child_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='child_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="adult_rec">Adult</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="adult_rec" name="adult_rec" onclick="hideMyAlert('adult_rec_alert')" type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='adult_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='adult_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-                 <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label" for="senior_rec">Senior</label>
-                    <div class="col-sm-9">
-                       <input class="form-control" id="senior_rec" name="senior_rec" onclick="hideMyAlert('senior_rec_alert')" type="text" placeholder="0-1">
-                    </div>
-                    <br>
-                     <br>
-                     <div class="alert alert-danger outline alert-dismissible fade show" style='display: none;' name='senior_rec_alert' role="alert">                      
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
-                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                           <line x1="12" y1="9" x2="12" y2="13"></line>
-                           <line x1="12" y1="17" x2="12" y2="17"></line>
-                        </svg>
-                        <p id='senior_rec_alert'>Population size must not be NULL.</p>
-                     </div>
-                 </div>
-           </div>
+            <!-- Container-fluid Ends-->
         </div>
-     </div>
-     <div class="row">
-      <div>
-         <button type='submit' class="btn btn-primary">Start Simulation</button>
-         <button class="btn btn-secondary">Reset Values</button> 
-         <br>
-         <br>
-      </div>
-   </form>
-     </div>
-   </div>
-   <!-- Container-fluid Ends-->
-</div>
-<script>
-   function getDemographyData(){
-        var id = document.getElementById('region').value;
-        $.ajax({
-            url:'/semi-auto/get_data',
-            type: 'POST',
-            data:{
-                id:id,
-                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-            },
-            success:function(data){
-                var n_obj = document.getElementById('pop_size').value = data.population;
-                var white = document.getElementById('white').value = data.white;
-                var black = document.getElementById('black').value = data.black;
-                var asian = document.getElementById('asian').value = data.asian;
-                var other = document.getElementById('other').value = data.other;
-                var male = document.getElementById('male').value = data.male;
-                var female = document.getElementById('female').value = data.female;
-                var child = document.getElementById('child').value = data.child;
-                var adult = document.getElementById('adult').value = data.adult;
-                var senior = document.getElementById('senior').value = data.senior;
+        <script>
+            function getDemographyData() {
+                var id = document.getElementById('region').value;
+                $.ajax({
+                    url: '/semi-auto/get_data',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function (data) {
+                        var n_obj = document.getElementById('pop_size').value = data.population;
+                        var white = document.getElementById('white').value = data.white;
+                        var black = document.getElementById('black').value = data.black;
+                        var asian = document.getElementById('asian').value = data.asian;
+                        var other = document.getElementById('other').value = data.other;
+                        var male = document.getElementById('male').value = data.male;
+                        var female = document.getElementById('female').value = data.female;
+                        var child = document.getElementById('child').value = data.child;
+                        var adult = document.getElementById('adult').value = data.adult;
+                        var senior = document.getElementById('senior').value = data.senior;
+                    }
+                })
             }
-        })
-    }
-   function switchGraph(){
-    var val = document.getElementById('graph').value;
-    var obj = document.getElementById('conn');
-    if(val == 0){
-        obj.style.display = 'none';
-    }
-    else if(val == 1){
-        obj.style.display = 'block';
-    } 
-}
-   function uploadImages(){
-      var len = $('#my_form input[type=file]').get(0).files.length;
-      if(len<10){
-         var obj2 = document.getElementById('upload_alert').innerText = 'Minimum 10 image files MUST be uploaded.'
-         var obj =document.getElementsByName('upload_alert');
-         obj[0].style.display = 'block';
-      }
-      else{
-         var obj =document.getElementsByName('upload_alert');
-         obj[0].style.display = 'none';
-         var form = document.getElementById('my_form');
-         var alertobj = document.getElementById('alertbox');
-         alertobj.style.display = 'block';
-         $.ajax({
-            type:'POST',
-            url:'/facial-recognition',
-            data: new FormData(form),
-            processData:false,
-            contentType:false,
-            success:function(data){
-               var alertobj = document.getElementById('alertbox');
-               alertobj.style.display = 'none';
-               var msg_obj = document.getElementById('msg').style.display = 'block';
-               var n_obj = document.getElementById('fr_n').innerHTML = 'N: '.concat(data.N);
-               var w_obj = document.getElementById('fr_white').innerHTML = 'White: '.concat(data.white);
-               var b_obj = document.getElementById('fr_black').innerHTML = 'Black: '.concat(data.black);
-               var a_obj = document.getElementById('fr_asian').innerHTML = 'Asian: '.concat(data.asian);
-               var o_obj = document.getElementById('fr_other').innerHTML = 'Other: '.concat(data.other);
-               var m_obj = document.getElementById('fr_male').innerHTML = 'Male: '.concat(data.male);
-               var f_obj = document.getElementById('fr_female').innerHTML = 'Female: '.concat(data.female);
-               var ch_obj = document.getElementById('fr_child').innerHTML = 'Child: '.concat(data.child);
-               var ad_obj = document.getElementById('fr_adult').innerHTML = 'Adult: '.concat(data.adult);
-               var s_obj = document.getElementById('fr_senior').innerHTML = 'Senior: '.concat(data.senior);
-               var pop_obj = document.getElementById('pop_size').value = data.N;
-               var white = document.getElementById('white').value = data.white;
-               var black = document.getElementById('black').value = data.black;
-               var asian = document.getElementById('asian').value = data.asian;
-               var other = document.getElementById('other').value = data.other;
-               var male = document.getElementById('male').value = data.male;
-               var female = document.getElementById('female').value = data.female;
-               var child = document.getElementById('child').value = data.child;
-               var adult = document.getElementById('adult').value = data.adult;
-               var senior = document.getElementById('senior').value = data.senior;
+
+            function switchGraph() {
+                var val = document.getElementById('graph').value;
+                var obj = document.getElementById('conn');
+                if (val == 0) {
+                    obj.style.display = 'none';
+                } else if (val == 1) {
+                    obj.style.display = 'block';
+                }
             }
-         })
-      }
-   }
-</script>
-{% include 'common/footer.html' %}
+
+            function uploadImages() {
+                var len = $('#my_form input[type=file]').get(0).files.length;
+                if (len < 10) {
+                    var obj2 = document.getElementById('upload_alert').innerText = 'Minimum 10 image files MUST be uploaded.'
+                    var obj = document.getElementsByName('upload_alert');
+                    obj[0].style.display = 'block';
+                } else {
+                    var obj = document.getElementsByName('upload_alert');
+                    obj[0].style.display = 'none';
+                    var form = document.getElementById('my_form');
+                    var alertobj = document.getElementById('alertbox');
+                    alertobj.style.display = 'block';
+                    $.ajax({
+                        type: 'POST',
+                        url: '/facial-recognition',
+                        data: new FormData(form),
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            var alertobj = document.getElementById('alertbox');
+                            alertobj.style.display = 'none';
+                            var msg_obj = document.getElementById('msg').style.display = 'block';
+                            var n_obj = document.getElementById('fr_n').innerHTML = 'N: '.concat(data.N);
+                            var w_obj = document.getElementById('fr_white').innerHTML = 'White: '.concat(data.white);
+                            var b_obj = document.getElementById('fr_black').innerHTML = 'Black: '.concat(data.black);
+                            var a_obj = document.getElementById('fr_asian').innerHTML = 'Asian: '.concat(data.asian);
+                            var o_obj = document.getElementById('fr_other').innerHTML = 'Other: '.concat(data.other);
+                            var m_obj = document.getElementById('fr_male').innerHTML = 'Male: '.concat(data.male);
+                            var f_obj = document.getElementById('fr_female').innerHTML = 'Female: '.concat(data.female);
+                            var ch_obj = document.getElementById('fr_child').innerHTML = 'Child: '.concat(data.child);
+                            var ad_obj = document.getElementById('fr_adult').innerHTML = 'Adult: '.concat(data.adult);
+                            var s_obj = document.getElementById('fr_senior').innerHTML = 'Senior: '.concat(data.senior);
+                            var pop_obj = document.getElementById('pop_size').value = data.N;
+                            var white = document.getElementById('white').value = data.white;
+                            var black = document.getElementById('black').value = data.black;
+                            var asian = document.getElementById('asian').value = data.asian;
+                            var other = document.getElementById('other').value = data.other;
+                            var male = document.getElementById('male').value = data.male;
+                            var female = document.getElementById('female').value = data.female;
+                            var child = document.getElementById('child').value = data.child;
+                            var adult = document.getElementById('adult').value = data.adult;
+                            var senior = document.getElementById('senior').value = data.senior;
+                        }
+                    })
+                }
+            }
+        </script>
+        {% include 'common/footer.html' %}
