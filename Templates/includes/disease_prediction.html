@@ -1,0 +1,91 @@
+<div class="col-xl-4 col-md-12 box-col-12">
+   <div class="card" id='ml-card'>
+      <div class="card-header pb-0">
+         <h5>Disease Infection Probability Prediction</h5>
+      </div>
+      <div class="card-body">
+         <form id='ml' class="theme-form" method='POST'>
+            {% csrf_token %}
+            <div class="mb-3 row">
+               <label class="col-form-label col-sm-3 pt-0"for='gender'>Gender</label>
+               <select class="form-select btn-pill digits" id="gender">
+                  <option default='true' value=0>Male</option>
+                  <option value=1>Female</option>
+               </select>
+            </div>
+            <div class="mb-3 row">
+               <label class="col-form-label col-sm-3 pt-0"for='ethnicity'>Ethnicity</label>
+               <select class="form-select btn-pill digits" id="ethnicity">
+                  <option default='true' value=0>White</option>
+                  <option value=1>Black</option>
+                  <option value=2>Asian</option>
+                  <option value=3>Other</option>
+               </select>
+            </div>
+            <div class="mb-3 row">
+               <label class="col-form-label col-sm-3 pt-0"for='age'>Age</label>
+               <select class="form-select btn-pill digits" id="age">
+                  <option default='true' value=2>0-4</option>
+                  <option value=7>5-9</option>
+                  <option value=12>10-14</option>
+                  <option value=17>15-19</option>
+                  <option value=22>20-24</option>
+                  <option value=27>25-29</option>
+                  <option value=32>30-34</option>
+                  <option value=37>35-39</option>
+                  <option value=42>40-44</option>
+                  <option value=47>45-49</option>
+                  <option value=52>50-54</option>
+                  <option value=57>55-59</option>
+                  <option value=62>60-64</option>
+                  <option value=67>65-69</option>
+                  <option value=72>70-74</option>
+                  <option value=77>75+</option>
+               </select>
+            </div>
+            <h5>OR</h5>
+            <div class='mb-3 row'>
+               <label class="col-sm-3 col-form-label">Select Image</label>
+               <div class="col-sm-9">
+                  <input class="form-control" name='imagee' id='imagee' onchange="postImage()" type="file">
+               </div>
+               <br>
+               <br>
+               <div class="alert alert-dark dark alert-dismissible fade show" id='alertbox' style="display: none;" role="alert">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+                     <circle cx="12" cy="12" r="10"></circle>
+                     <line x1="12" y1="8" x2="12" y2="12"></line>
+                     <line x1="12" y1="16" x2="12" y2="16"></line>
+                  </svg>
+                  <p> Please wait while we proceed.</p>
+               </div>
+            </div>
+            <div class="mb-3 row">
+               <label class="col-form-label col-sm-3 pt-0"for='age2'>Contacted Entity Age</label>
+               <select class="form-select btn-pill digits" id="age2">
+                  <option default='true' value=2>0-4</option>
+                  <option value=7>5-9</option>
+                  <option value=12>10-14</option>
+                  <option value=17>15-19</option>
+                  <option value=22>20-24</option>
+                  <option value=27>25-29</option>
+                  <option value=32>30-34</option>
+                  <option value=37>35-39</option>
+                  <option value=42>40-44</option>
+                  <option value=47>45-49</option>
+                  <option value=52>50-54</option>
+                  <option value=57>55-59</option>
+                  <option value=62>60-64</option>
+                  <option value=67>65-69</option>
+                  <option value=72>70-74</option>
+                  <option value=77>75+</option>
+               </select>
+            </div>
+            <button type="button" onclick='sendPredData()' class="btn btn-primary">Predict</button>
+            <br>
+            <br>
+            <h4 id='prob' style='display: none;'></h4>
+         </form>
+      </div>
+   </div>
+</div>

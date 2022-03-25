@@ -1,0 +1,181 @@
+<script>
+   //--------------------------------------TOTAL RECOVERY----------------------------------------
+   
+   function getTotalRecoveryData(){
+         var inf = '{{data.total_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var labels = [];
+         for (i = 1; i <= inf.length; i++) {
+            labels.push(i);
+         }
+         const data = {
+            labels: labels,
+            datasets: [{
+               label: 'Recovered',
+               data: inf,
+               fill: false,
+               borderColor: 'green',
+               tension: 0.1
+            }]
+         };
+         return data;
+      }
+      function getTotalRecoveryConfig(){
+         const config = {
+            type: 'line',
+            data: getTotalRecoveryData(),
+            options: getOptions()
+         };
+         return config;
+      }
+      var myTotalRecoveryChart = new Chart(
+         document.getElementById('Total_Recovery'),
+         getTotalRecoveryConfig()
+      );
+   //-------------------------------------ETHNIC GROUPS RECOVERY------------------------------------------
+      function getEthRecoveryData(){
+         var white_rec = '{{data.white_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var black_rec = '{{data.black_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var asian_rec = '{{data.asian_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var other_rec = '{{data.other_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         ilabel = Math.max(white_rec.length,black_rec.length,asian_rec.length,other_rec.length);
+         var labels = [];
+         for (i = 1; i <= ilabel; i++) {
+            labels.push(i);
+         }
+         const data = {
+            labels: labels,
+            datasets: [{
+               label: 'White',
+               data: white_rec,
+               fill: false,
+               borderColor: 'blue',
+               tension: 0.1
+            },
+            {
+               label: 'Black',
+               data: black_rec,
+               fill: false,
+               borderColor: 'red',
+               tension: 0.1
+            },
+            {
+               label: 'Asian',
+               data: asian_rec,
+               fill: false,
+               borderColor: 'green',
+               tension: 0.1
+            },
+            {
+               label: 'Other',
+               data: other_rec,
+               fill: false,
+               borderColor: 'black',
+               tension: 0.1
+            }
+         ]
+         };
+         return data;
+      }
+      function getEthRecoveryConfig(){
+         const config = {
+            type: 'line',
+            data: getEthRecoveryData(),
+            options: getOptions()
+         };
+         return config;
+      }
+      var myEthRecoveryChart = new Chart(
+         document.getElementById('Eth_Recovery'),
+         getEthRecoveryConfig()
+      );
+   //--------------------------------------------GENDER RECOVERY--------------------------------------------
+      function getGenRecoveryData(){
+         var male_rec = '{{data.male_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var female_rec = '{{data.female_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         ilabel = Math.max(male_rec.length,female_rec.length);
+         var labels = [];
+         for (i = 1; i <= ilabel; i++) {
+            labels.push(i);
+         }
+         const data = {
+            labels: labels,
+            datasets: [{
+               label: 'Male',
+               data: male_rec,
+               fill: false,
+               borderColor: 'blue',
+               tension: 0.1
+            },
+            {
+               label: 'Female',
+               data: female_rec,
+               fill: false,
+               borderColor: 'yellow',
+               tension: 0.1
+            },
+         ]
+         };
+         return data;
+      }
+      function getGenRecoveryConfig(){
+         const config = {
+            type: 'line',
+            data: getGenRecoveryData(),
+            options: getOptions()
+         };
+         return config;
+      }
+      var myGenRecoveryChart = new Chart(
+         document.getElementById('Gen_Recovery'),
+         getGenRecoveryConfig()
+      );
+   //--------------------------------------------AGE RECOVERY----------------------------------------------
+      function getAgeRecoveryData(){
+         var child_rec = '{{data.child_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var adult_rec = '{{data.adult_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
+         var senior_rec = '{{data.senior_rec}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+         ilabel = Math.max(child_rec.length,adult_rec.length,senior_rec.length);
+         var labels = [];
+         for (i = 1; i <= ilabel; i++) {
+            labels.push(i);
+         }
+         const data = {
+            labels: labels,
+            datasets: [{
+               label: 'Child',
+               data: child_rec,
+               fill: false,
+               borderColor: 'yellow',
+               tension: 0.1
+            },
+            {
+               label: 'Adult',
+               data: adult_rec,
+               fill: false,
+               borderColor: 'green',
+               tension: 0.1
+            },
+            {
+               label: 'Senior',
+               data: senior_rec,
+               fill: false,
+               borderColor: 'red',
+               tension: 0.1
+            },
+         ]
+         };
+         return data;
+      }
+      function getAgeRecoveryConfig(){
+         const config = {
+            type: 'line',
+            data: getAgeRecoveryData(),
+            options: getOptions()
+         };
+         return config;
+      }
+      var myAgeRecoveryChart = new Chart(
+         document.getElementById('Age_Recovery'),
+         getAgeRecoveryConfig()
+      );
+</script>

@@ -1,0 +1,54 @@
+<div class="card" id='fac-card' style='display: none;'>
+    <div class="card-header pb-0">
+       <h5>Select Images</h5>
+    </div>
+    <form method='POST' name='my_form' id='my_form' enctype="multipart/form-data">
+       {% csrf_token %}
+       <div class="card-body">
+          <div class="mb-3 row">
+             <label class="col-sm-3 col-form-label">Upload File</label>
+             <div class="col-sm-9">
+                <input class="form-control" id='images' name='images'
+                   accept="image/png, image/JPG image/jpg, image/jpeg" type="file" multiple>
+             </div>
+          </div>
+          <div class="mb-3 row">
+             <button type='button' onclick="uploadImages()" class="btn btn-primary">Upload
+             </button>
+          </div>
+          <div class="alert alert-danger outline alert-dismissible fade show"
+             style='display: none;' name='upload_alert' role="alert">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" class="feather feather-alert-triangle">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12" y2="17"></line>
+             </svg>
+             <p id='upload_alert'>Population size must not be NULL.</p>
+          </div>
+          <div class="alert alert-dark dark alert-dismissible fade show" id='alertbox'
+             style="display: none;" role="alert">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" class="feather feather-alert-circle">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12" y2="16"></line>
+             </svg>
+             <p> Please wait while we proceed.</p>
+          </div>
+          <h3 style="display: none;" id='msg'>EXTRACTED DATA:</h3>
+          <h5 style="display: block;" id='fr_n'></h5>
+          <h5 style="display: block;" id='fr_white'></h5>
+          <h5 style="display: block;" id='fr_black'></h5>
+          <h5 style="display: block;" id='fr_asian'></h5>
+          <h5 style="display: block;" id='fr_other'></h5>
+          <h5 style="display: block;" id='fr_male'></h5>
+          <h5 style="display: block;" id='fr_female'></h5>
+          <h5 style="display: block;" id='fr_child'></h5>
+          <h5 style="display: block;" id='fr_adult'></h5>
+          <h5 style="display: block;" id='fr_senior'></h5>
+       </div>
+    </form>
+ </div>
