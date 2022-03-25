@@ -81,11 +81,11 @@ def predictInfection(request):
         del data["csrfmiddlewaretoken"]
 
     parameters = {
-        "N": data.get("n"),
-        "gender": data.get("gender"),
-        "ethnicity": data.get("ethnicity"),
-        "target_age": data.get("age"),
-        "source_age": data.get("age2"),
+        "N": int(data.get("n")),
+        "gender": int(data.get("gender")),
+        "ethnicity": int(data.get("ethnicity")),
+        "target_age": int(data.get("age")),
+        "source_age": int(data.get("age2")),
         "filepath": "{}/log.csv".format(settings.MEDIA_ROOT),
     }
     prediction = predict_infection(parameters)

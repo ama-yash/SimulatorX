@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.http.response import JsonResponse
 from django.shortcuts import render
-
-from semi_auto.models import Population
+from networkx import barabasi_albert_graph
+from compartmental_models import si, sir, sis
 import pandas as pd
-
+import networkx as nx
+from demographic_graph_generator import generate_nodes
 def getIndex(request):
     template = "man_sim/index.html"
     data = pd.read_csv('datasets/demography.csv',index_col=0)
@@ -27,23 +28,39 @@ def getResult(request):
     if data:
         N = int(data.get("pop_size"))
         model_type = int(data.get("model"))
+    ethnicity = {
+        "white": float(data["white"]),
+        "black": float(data["black"]),
+        "asian": float(data["asian"]),
+        "other": float(data["other"]),
+    }
+    gender = {"male": float(data["male"]), "female": float(data["female"])}
+    age = {
+        "child": float(data["child"]),
+        "adult": float(data["adult"]),
+        "senior": float(data["senior"]),
+    }
+    if int(data["graph_code"]) == 0:
+        G = nx.empty_graph(N)
+        is_activity_network = True
+    elif int(data["graph_code"]) == 1:
+        G = barabasi_albert_graph(N, 2)
     if model_type == 0:
         # SI model
-        model = Models(mode="manual", parameters=data)
-        model_data = model.si()
-        # model_data = simulate_si(data)
+        G = generate_nodes(G, ethnicity, gender, age)
+        model_data = si(G, is_activity_network=is_activity_network, seeds=data["seeds"])
         template = "man_sim/si_result.html"
     elif model_type == 1:
         # SIS model
-        model = Models(mode="manual", parameters=data)
-        model_data = model.sis()
+        G = generate_nodes(G, ethnicity, gender, age)
+        model_data = sis(G, is_activity_network=is_activity_network, seeds=data["seeds"])
         # model_data = simulate_sis(data)
         template = "man_sim/sis_result.html"
     elif model_type == 2:
         # SIR model
         # model_data = simulate_sir(data)
-        model = Models(mode="manual", parameters=data)
-        model_data = model.sir()
+        G = generate_nodes(G, ethnicity, gender, age)
+        model_data = sir(G, is_activity_network=is_activity_network, seeds=data["seeds"])
         template = "man_sim/sir_result.html"
 
     data = {"data": model_data, "N": N}
