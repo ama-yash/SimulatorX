@@ -73,17 +73,7 @@
             </div>
             <br>
             <br>
-            <div class="alert alert-danger outline alert-dismissible fade show" name='time_alert'
-               style='display: none;' role="alert">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-               stroke-linejoin="round" class="feather feather-alert-triangle">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12" y2="17"></line>
-            </svg>
-            <p id='time_alert'>Population size must not be NULL.</p>
-            </div>
+            {% include "includes/error_message.html" with alert_id="time_alert" %}
             </div>
             <div class="mb-3 row">
             <br>
@@ -94,17 +84,7 @@
             </div>
             <br>
             <br>
-            <div class="alert alert-danger outline alert-dismissible fade show"
-               style='display: none;' name='seeds_alert' role="alert">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-               stroke-linejoin="round" class="feather feather-alert-triangle">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12" y2="17"></line>
-            </svg>
-            <p id='seeds_alert'>Population size must not be NULL.</p>
-            </div>
+            {% include "includes/error_message.html" with alert_id="seeds_alert" %}
             </div>
             <div class="card-footer">
             <button type='submit' class="btn btn-primary">Start Simulation</button>

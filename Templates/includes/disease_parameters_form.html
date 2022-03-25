@@ -13,17 +13,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='white_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='white_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="white_inf_alert"%}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="black_inf">Black</label>
@@ -33,17 +23,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='black_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='black_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="black_inf_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="asian_inf">Asian</label>
@@ -53,17 +33,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='asian_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='asian_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="asian_inf_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="other_inf">Other</label>
@@ -73,17 +43,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='other_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='other_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="other_inf_alert" %}
           </div>
           <h6>Infection Rates for Gender:</h6>
           <div class="mb-3 row">
@@ -94,17 +54,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='male_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='male_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="male_inf_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="female_inf">Female</label>
@@ -115,17 +65,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='female_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='female_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="female_inf_alert" %}
           </div>
           <h6>Infection Rates for Age Groups:</h6>
           <div class="mb-3 row">
@@ -136,17 +76,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='child_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='child_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="child_inf_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="adult_inf">Adult</label>
@@ -156,17 +86,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='adult_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='adult_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="adult_inf_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="senior_inf">Senior</label>
@@ -176,17 +96,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='senior_inf_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='senior_inf_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="senior_inf_alert" %}
           </div>
        </div>
     </div>
@@ -206,17 +116,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='white_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='white_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="white_rec_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="black_rec">Black</label>
@@ -226,17 +126,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='black_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='black_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="black_rec_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="asian_rec">Asian</label>
@@ -246,17 +136,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='asian_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='asian_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="asian_rec_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="other_rec">Other</label>
@@ -266,17 +146,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='other_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='other_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="other_rec_alert" %}
           </div>
           <h6>Recovery Rates for Gender:</h6>
           <div class="mb-3 row">
@@ -287,17 +157,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='male_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='male_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="male_rec_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="female_rec">Female</label>
@@ -307,17 +167,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='female_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='female_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="female_rec_alert" %}
           </div>
           <h6>Recovery Rates for Age Groups:</h6>
           <div class="mb-3 row">
@@ -328,17 +178,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='child_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='child_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="child_rec_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="adult_rec">Adult</label>
@@ -348,17 +188,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='adult_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='adult_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="adult_rec_alert" %}
           </div>
           <div class="mb-3 row">
              <label class="col-sm-3 col-form-label" for="senior_rec">Senior</label>
@@ -368,17 +198,7 @@
              </div>
              <br>
              <br>
-             <div class="alert alert-danger outline alert-dismissible fade show"
-                style='display: none;' name='senior_rec_alert' role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                   stroke-linejoin="round" class="feather feather-alert-triangle">
-                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                   <line x1="12" y1="9" x2="12" y2="13"></line>
-                   <line x1="12" y1="17" x2="12" y2="17"></line>
-                </svg>
-                <p id='senior_rec_alert'>Population size must not be NULL.</p>
-             </div>
+             {% include "includes/error_message.html" with alert_id="senior_rec_alert" %}
           </div>
        </div>
     </div>
