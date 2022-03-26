@@ -3,3 +3,4 @@
 .idea/misc.xml
 .idea/SimulatorX.iml
 *.pyc
+static/media/log.csv

@@ -1,0 +1,12 @@
+{% for demographic_property in demographic_property_list.split %}
+<div class="mb-3 row">
+     <label class="col-sm-3 col-form-label" for="{{ demographic_property }}_rec">{{ demographic_property|capfirst }}</label>
+     <div class="col-sm-9">
+        <input width=25 class="form-control" id="{{ demographic_property|capfirst }}_rec" name='{{ demographic_property|capfirst }}_rec'
+           onclick="hideMyAlert('{{ demographic_property|capfirst }}_rec_alert')" type="text" placeholder="0-1">
+     </div>
+     <br>
+     <br>
+     {% include "includes/error_message.html" with alert_id="{{ demographic_property|capfirst }}_rec_alert" %}
+</div>
+{% endfor %}

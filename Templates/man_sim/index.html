@@ -4,135 +4,72 @@
 <script src="{% static 'js/common.js' %}"></script>
 {% endblock %}
 <div class="page-body-wrapper horizontal-menu" style='padding-right: 0px'>
-<div class="page-body" style="margin-left: 10px;">
-<div class="container-fluid">
-   <div class="row">
-      <div class="col-sm-3">
-         <h2>Manual Simulation</h2>
-         <br>
-         <table style="width:450px;">
-            <tr>
-               <td style='width:500px;height:30px;'>
-                  <button class='btn btn-success' id='man-but' onclick="switchManual()" type='button'>
-                  Create Manual Nodes
-                  </button>
-               </td>
-               <td style='width:500px;height:30px;'>
-                  <button width='300px' class='btn btn-light' id='fac-but' onclick="switchFacial()"
-                     type='button'>Use Facial Recognition
-                  </button>
-               </td>
-            </tr>
-         </table>
-         <br>
-         {# add facial-recognition form#}
-         {% include "includes/facial_rec_form.html" %}
-         <form class="theme-form" onsubmit="return validateFormExt()" action="/manual-simulation/result" enctype="multipart/form-data" method="POST" name='myForm' id='myForm'>
-            {% csrf_token %}
-            {# add region based network form#}
-            {% include "includes/region_based_network_form.html" %}
-      </div>
-      <div class="col-sm-3">
-      <br>
-      <br>
-      <br>
-      <button class='btn btn-light' id='reg-but' style="top:5px;left:-7px;position: relative;"
-         onclick="switchRegional()" type='button'>Region-based Nodes
-      </button>
-      <div class="card" style='top:26px' name='model'>
-      <div class="card-header pb-0">
-      <h5>Model Characteristics</h5>
-      </div>
-      <div class="card-body">
-      <fieldset class="mb-3">
-      <div class="row">
-      <label class="col-form-label col-sm-3 pt-0">Model Type</label>
-      <div class="col-sm-9">
-      <div class="form-check radio radio-primary">
-      <input class="form-check-input" onchange="hideRecoveryParameters()"
-         id="si_model" type="radio" name="model" value="0">
-      <label class="form-check-label" for="si_model">SI
-      (Susceptible-Infected)</label>
-      </div>
-      <div class="form-check radio radio-primary">
-      <input class="form-check-input" onchange="showRecoveryParameters()" checked
-         id="sis_model" type="radio" name="model" value="1">
-      <label class="form-check-label" for="sis_model">SIS
-      (Susceptible-Infected-Susceptible)</label>
-      </div>
-      <div class="form-check radio radio-primary">
-      <input class="form-check-input" onchange="showRecoveryParameters()"
-         id="sir_model" type="radio" name="model" value="2">
-      <label class="form-check-label" for="sir_model">SIR
-      (Susceptible-Infected-Removed)</label>
-      </div>
-      </div>
-      </div>
-      </fieldset>
-      <div class="mb-3 row">
-      <label class="col-form-label col-sm-3 pt-0" for='graph'>Select Graph</label>
-      <select class="form-select btn-pill digits" onchange="switchGraph()" id="graph"
-         name='graph_code'>
-      <option default='true' value=0>Activity Network</option>
-      <option value=1>Barabasi-Albert Model</option>
-      </select>
-      </div>
-      <div class="mb-3 row" id=conn style='display: none;'>
-      <br>
-      <label class="col-sm-3 col-form-label" for="m">No. of Connections (m)</label>
-      <div class="col-sm-9">
-      <input class="form-control" id="m" name='m' type="text" placeholder="1-10">
-      </div>
-      </div>
-      <div class="mb-3 row">
-      <br>
-      <label class="col-sm-3 col-form-label" for="time">Time (in Days)</label>
-      <div class="col-sm-9">
-      <input class="form-control" id="time" onclick="hideMyAlert('time_alert')"
-         name='time' type="text" placeholder="10-500">
-      </div>
-      <br>
-      <br>
-      {% include "includes/error_message.html" with alert_id="time_alert" %}
-      </div>
-      <div class="mb-3 row">
-      <br>
-      <label class="col-sm-3 col-form-label" for="seeds">Seeds (in %)</label>
-      <div class="col-sm-9">
-      <input class="form-control" id="seeds" onclick="hideMyAlert('seeds_alert')"
-         name='seeds' type="text" placeholder="0-100">
-      </div>
-      <br>
-      <br>
-      {% include "includes/error_message.html" with alert_id="seeds_alert" %}
-      </div>
-      </div>
-      </div>
-      </div>
-      {# Disease parameters form view #}
-      {% include "includes/disease_parameters_form.html" %}
-      <div class="row">
-      <div>
-      <button type='submit' class="btn btn-primary">Start Simulation</button>
-      <button class="btn btn-secondary">Reset Values</button>
-      <br>
-      <br>
-      </div>
-      </form>
-      </div>
-   </div>
-   <!-- Container-fluid Ends-->
+    <div class="page-body" style="margin-left: 10px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>Manual Simulation</h2>
+                    <br>
+                    <table style="width:450px;">
+                        <tr>
+                            <td style='width:500px;height:30px;'>
+                                <button class='btn btn-success' id='man-but' onclick="switchManual()" type='button'>
+                                    Create Manual Nodes
+                                </button>
+                            </td>
+                            <td style='width:500px;height:30px;'>
+                                <button width='300px' class='btn btn-light' id='fac-but' onclick="switchFacial()"
+                                        type='button'>Use Facial Recognition
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    {# add facial-recognition form#}
+                    {% include "includes/forms/facial_rec_form.html" %}
+
+                    <form class="theme-form" onsubmit="return validateFormExt()" action="/manual-simulation/result"
+                          enctype="multipart/form-data" method="POST" name='myForm' id='myForm'>
+                        {% csrf_token %}
+                        {# add region based network form#}
+                        {% include "includes/forms/region_based_network_form.html" %}
+                </div>
+                <div class="col-sm-3">
+                    <br>
+                    <br>
+                    <br>
+                    <button class='btn btn-light' id='reg-but' style="top:5px;left:-7px;position: relative;"
+                            onclick="switchRegional()" type='button'>Region-based Nodes
+                    </button>
+                    {# Model Characteristics #}
+                    {% include "includes/forms/model_characteristics_form.html" with is_manual=True %}
+                </div>
+                {# Disease parameters form view #}
+                {% include "includes/forms/disease_parameters_form.html" %}
+                <div class="row">
+                    <div>
+                        <button type='submit' class="btn btn-primary">Start Simulation</button>
+                        <button class="btn btn-secondary">Reset Values</button>
+                        <br>
+                        <br>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Container-fluid Ends-->
+        </div>
+        <script src="{% static 'js/common.js' %}"></script>
+        <script>
+            function switchGraph() {
+                var val = document.getElementById('graph').value;
+                var obj = document.getElementById('conn');
+                if (val == 0) {
+                    obj.style.display = 'none';
+                } else if (val == 1) {
+                    obj.style.display = 'block';
+                }
+            }
+        </script>
+        {% include 'common/footer.html' %}
+    </div>
 </div>
-<script src="{% static 'js/common.js' %}"></script>
-<script>
-   function switchGraph() {
-       var val = document.getElementById('graph').value;
-       var obj = document.getElementById('conn');
-       if (val == 0) {
-           obj.style.display = 'none';
-       } else if (val == 1) {
-           obj.style.display = 'block';
-       }
-   }
-</script>
-{% include 'common/footer.html' %}

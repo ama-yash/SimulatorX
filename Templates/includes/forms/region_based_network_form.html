@@ -1,0 +1,47 @@
+<div class="card" id='pop-card'>
+    <div class="card-header pb-0">
+       <h5>Population Characteristics</h5>
+    </div>
+    <div class="card-body">
+       <div class="mb-3 row">
+          <div class="mb-3 row" id=reg-card style="display: none;">
+             <label class="col-form-label col-sm-3 pt-0" for='region'>Select Region</label>
+             <select class="form-select btn-pill digits" onchange="getDemographyData()" id="region"
+                name='region'>
+                <option value=0>-----Select Area-----</option>
+                {% for d in dobj %}
+                <option value="{{d}}">{{d}}</option>
+                {% endfor %}
+             </select>
+          </div>
+          <label class="col-sm-3 col-form-label" for="pop_size">Population Size (N)</label>
+          <div class="col-sm-9">
+             <input class="form-control" onclick="hideMyAlert('pop_size_alert')" id='pop_size' name="pop_size"
+                type="text" placeholder="100-20000">
+          </div>
+          {% include "includes/error_message.html" with alert_id="pop_size_alert" %}
+       </div>
+        {% with 'male female white black asian other child adult senior' as demographics_list %}
+            {% for demographic_property in demographics_list.split %}
+                {% if  demographic_property == 'male' %}
+                    <h6>Gender Distribution:</h6>
+                {% elif demographic_property == 'white' %}
+                    <h6>Ethnicity Distribution:</h6>
+                {% elif demographic_property == 'child' %}
+                    <h6>Age Distribution:</h6>
+                {% endif %}
+                <div class="mb-3 row">
+                  <br>
+                  <label class="col-sm-3 col-form-label" for="{{ demographic_property }}">{{ demographic_property|capfirst }} (%)</label>
+                  <div class="col-sm-9">
+                     <input class="form-control" id='{{ demographic_property }}' onclick="hideMyAlert('{{ demographic_property }}_alert')" name="{{ demographic_property }}" type="text"
+                        placeholder="0-100">
+                  </div>
+                  <br>
+                  <br>
+                  {% include "includes/error_message.html" with alert_id="{{ demographic_property }}_alert" %}
+               </div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+ </div>

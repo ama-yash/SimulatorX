@@ -1,0 +1,51 @@
+<div class="col-sm-3">
+    <div class="card" style='top:123px' name='model'>
+        <div class="card-header pb-0">
+            <h5>Infection Parameters</h5>
+        </div>
+        <div class="card-body">
+            <h6>Infection Rates for Ethnicity:</h6>
+            {% with 'white black asian other' as ethinicity_list %}
+                {% include "includes/forms/infection_input_form_list.html" with demographic_property_list=ethinicity_list %}
+            {% endwith %}
+
+
+            <h6>Infection Rates for Gender:</h6>
+            {% with 'male female' as gender_list %}
+                {% include "includes/forms/infection_input_form_list.html" with demographic_property_list=gender_list %}
+            {% endwith %}
+
+            <h6>Infection Rates for Age Groups:</h6>
+            {% with 'child adult senior' as age_list %}
+                {% include "includes/forms/infection_input_form_list.html" with demographic_property_list=age_list %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-3" id='rec-card'>
+    <div class="card" style='top:123px' name='recovery'>
+        <div class="card-header pb-0">
+            <h5>Recovery Parameters</h5>
+        </div>
+
+        <div class="card-body">
+            <h6>Recovery Rates for Ethnicity:</h6>
+
+            {% with 'white black asian other' as ethinicity_list %}
+                {% include "includes/forms/recovery_input_form_list.html" with demographic_property_list=ethinicity_list %}
+            {% endwith %}
+
+            <h6>Recovery Rates for Gender:</h6>
+            {% with 'male female' as gender_list %}
+                {% include "includes/forms/recovery_input_form_list.html" with demographic_property_list=gender_list %}
+            {% endwith %}
+
+            <h6>Recovery Rates for Age Groups:</h6>
+            {% with 'child adult senior' as age_list %}
+                {% include "includes/forms/recovery_input_form_list.html" with demographic_property_list=age_list %}
+            {% endwith %}
+
+        </div>
+    </div>
+</div>
