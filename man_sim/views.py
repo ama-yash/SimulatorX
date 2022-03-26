@@ -40,29 +40,35 @@ def getResult(request):
         "adult": float(data["adult"]),
         "senior": float(data["senior"]),
     }
+
+
+    is_sir = False
+    model_name = None
+
     if int(data["graph_code"]) == 0:
         G = nx.empty_graph(N)
         is_activity_network = True
     elif int(data["graph_code"]) == 1:
         G = barabasi_albert_graph(N, 2)
+
     if model_type == 0:
         # SI model
+        model_name = "SI"
         G = generate_nodes(G, ethnicity, gender, age)
         model_data = si(G, is_activity_network=is_activity_network, seeds=data["seeds"])
-        template = "man_sim/si_result.html"
     elif model_type == 1:
         # SIS model
+        model_name = "SIS"
         G = generate_nodes(G, ethnicity, gender, age)
         model_data = sis(G, is_activity_network=is_activity_network, seeds=data["seeds"])
         # model_data = simulate_sis(data)
-        template = "man_sim/sis_result.html"
     elif model_type == 2:
         # SIR model
-        # model_data = simulate_sir(data)
+        model_name = "SIR"
         G = generate_nodes(G, ethnicity, gender, age)
         model_data = sir(G, is_activity_network=is_activity_network, seeds=data["seeds"])
-        template = "man_sim/sir_result.html"
+        is_sir = True
 
-    data = {"data": model_data, "N": N}
+    data = {"data": model_data, "N": N, "model_name": model_name, "is_sir": is_sir, }
 
-    return render(request, template, data)
+    return render(request, "includes/results/results_view.html", data)

@@ -1,0 +1,71 @@
+<div class="card" style='top:26px' name='model'>
+                        <div class="card-header pb-0">
+                            <h5>Model Characteristics</h5>
+                        </div>
+                        <div class="card-body">
+                            <fieldset class="mb-3">
+                                <div class="row">
+                                    <label class="col-form-label col-sm-3 pt-0">Model Type</label>
+                                    <div class="col-sm-9">
+                                        <div class="form-check radio radio-primary">
+                                            <input class="form-check-input" onchange="hideRecoveryParameters()"
+                                                   id="si_model" type="radio" name="model" value="0">
+                                            <label class="form-check-label" for="si_model">SI
+                                                (Susceptible-Infected)</label>
+                                        </div>
+                                        <div class="form-check radio radio-primary">
+                                            <input class="form-check-input" onchange="showRecoveryParameters()" checked
+                                                   id="sis_model" type="radio" name="model" value="1">
+                                            <label class="form-check-label" for="sis_model">SIS
+                                                (Susceptible-Infected-Susceptible)</label>
+                                        </div>
+                                        <div class="form-check radio radio-primary">
+                                            <input class="form-check-input" onchange="showRecoveryParameters()"
+                                                   id="sir_model" type="radio" name="model" value="2">
+                                            <label class="form-check-label" for="sir_model">SIR
+                                                (Susceptible-Infected-Removed)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            {% if is_manual %}
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-sm-3 pt-0" for='graph'>Select Graph</label>
+                                <select class="form-select btn-pill digits" onchange="switchGraph()" id="graph"
+                                        name='graph_code'>
+                                    <option default='true' value=0>Activity Network</option>
+                                    <option value=1>Barabasi-Albert Model</option>
+                                </select>
+                            </div>
+                            {% endif %}
+                            <div class="mb-3 row" id=conn style='display: none;'>
+                                <br>
+                                <label class="col-sm-3 col-form-label" for="m">No. of Connections (m)</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="m" name='m' type="text" placeholder="1-10">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <br>
+                                <label class="col-sm-3 col-form-label" for="time">Time (in Days)</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="time" onclick="hideMyAlert('time_alert')"
+                                           name='time' type="text" placeholder="10-500">
+                                </div>
+                                <br>
+                                <br>
+                                {% include "includes/error_message.html" with alert_id="time_alert" %}
+                            </div>
+                            <div class="mb-3 row">
+                                <br>
+                                <label class="col-sm-3 col-form-label" for="seeds">Seeds (in %)</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="seeds" onclick="hideMyAlert('seeds_alert')"
+                                           name='seeds' type="text" placeholder="0-100">
+                                </div>
+                                <br>
+                                <br>
+                                {% include "includes/error_message.html" with alert_id="seeds_alert" %}
+                            </div>
+                        </div>
+                    </div>

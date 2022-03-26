@@ -1,5 +1,5 @@
 <script>
-   function sendPredData(){
+       function sendPredData(){
    var n = Number('{{N}}');
    var gender = document.getElementById('gender').value;
    var ethnicity = document.getElementById('ethnicity').value;
@@ -128,7 +128,7 @@
    return config;
    }
    var myTotalSusChart = new Chart(
-   document.getElementById('Tot_Sus'),
+   document.getElementById('Total_Sus'),
    getTotalSusConfig()
    );
    //---------------------------------------ETHNICITIES MIXED---------------------------------
@@ -185,7 +185,7 @@
    return config;
    }
    var myEthInfectionChart = new Chart(
-   document.getElementById('Eth_Infection'),
+   document.getElementById('Ethnic_Infection'),
    getEthInfectionConfig()
    );
    //-------------------------------------ETHNICITY SUS-------------------------------------------------
@@ -242,7 +242,7 @@
    return config;
    }
    var myEthSusChart = new Chart(
-   document.getElementById('Eth_Sus'),
+   document.getElementById('Ethnic_Sus'),
    getEthSusConfig()
    );
    //-------------------------------------GENDER MIXED------------------------------
@@ -283,7 +283,7 @@
    return config;
    }
    var myGenInfectionChart = new Chart(
-   document.getElementById('Gen_Infection'),
+   document.getElementById('Gender_Infection'),
    getGenInfectionConfig()
    );
    //-------------------------------------GEN SUS-----------------------------------
@@ -324,15 +324,15 @@
    return config;
    }
    var myGenSusChart = new Chart(
-   document.getElementById('Gen_Sus'),
+   document.getElementById('Gender_Sus'),
    getGenSusConfig()
    );
    //---------------------------------------------AGE MIXED-------------------------------------------
-   
+
    function getAgeInfectionData(){
    var child_inf = '{{data.child_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
    var adult_inf = '{{data.adult_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
-   var senior_inf = '{{data.senior_inf}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+   var senior_inf = '{{data.senior_inf}}'.split(',').map(function(item){return parseInt(item, 10);});
    ilabel = Math.max(child_inf.length,adult_inf.length,senior_inf.length);
    var labels = [];
    for (i = 1; i <= ilabel; i++) {
@@ -381,7 +381,7 @@
    function getAgeSusData(){
    var child_inf = '{{data.child_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
    var adult_inf = '{{data.adult_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
-   var senior_inf = '{{data.senior_sus}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+   var senior_inf = '{{data.senior_sus}}'.split(',').map(function(item){return parseInt(item, 10);});
    ilabel = Math.max(child_inf.length,adult_inf.length,senior_inf.length);
    var labels = [];
    for (i = 1; i <= ilabel; i++) {

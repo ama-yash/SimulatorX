@@ -1,0 +1,43 @@
+{% include 'common/header.html' %}
+{% load static %}
+
+{% block body %}
+<div class="page-body-wrapper horizontal-menu">
+<div class="page-body" style="margin-left: 10px;">
+   <div class="container-fluid">
+      <h2>Simulation Results - {{ model_name }} Model</h2>
+      <br>
+      <div class='row'>
+         <div class="col-xl-6 col-md-12 box-col-12">
+            <div class="card">
+               <div class="card-header pb-0">
+                  <h5>Spread of Infection in Entire community</h5>
+
+               </div>
+               <div class="card-body chart-block">
+                  <canvas id="Total_Infection"></canvas>
+                  <button class='btn btn-success' id='save-png' onclick="saveAsImage('Total_Infection')" type='button'>Download as PNG</button>
+               </div>
+            </div>
+         </div>
+          {% if covid_results %}
+            {% include "includes/disease_prediction.html" %}
+          {% endif %}
+      </div>
+        {% include "includes/model_graph_views/si_view.html" %}
+
+        {% if is_sir %}
+            {% include 'includes/model_graph_views/sir_view.html' %}
+        {% endif %}
+   </div>
+</div>
+{% endblock %}
+{% block script %}
+    {% include 'includes/ajax.html' %}
+    {% include 'chart_js_templates/draw_infection.html' %}
+    {% if is_sir %}
+        {% include 'chart_js_templates/draw_recovery.html' %}
+    {% endif %}
+{% endblock %}
+{% include 'common/footer.html' %}
+</div>

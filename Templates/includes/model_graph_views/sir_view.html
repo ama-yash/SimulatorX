@@ -1,0 +1,23 @@
+<h4>RECOVERY</h4>
+<br>
+<div class ='row'>
+    {% with 'Total Ethnic Gender Age' as group_list %}
+        {% for group in group_list.split %}
+            <div class="col-xl-6 col-md-12 box-col-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        {% if group == "Total" %}
+                            <h5>Recovery in Entire community</h5>
+                        {% else %}
+                            <h5>Recovery in {{ group }} Groups</h5>
+                        {% endif %}
+                    </div>
+                    <div class="card-body chart-block">
+                        <canvas id="{{ group }}_Recovery"></canvas>
+                        <button class='btn btn-success' id='save-png' onclick="saveAsImage('{{ group }}_Recovery')" type='button'>Download as PNG</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endwith %}
+</div>

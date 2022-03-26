@@ -4,100 +4,54 @@
 <script src="{% static 'js/common.js' %}"></script>
 {% endblock %}
 <div class="page-body-wrapper horizontal-menu">
-   <div class="page-body" style="margin-left: 10px;">
-      <!-- Container-fluid starts-->
-      <div class="container-fluid">
-         <div class="row">
-            <div class="col-sm-4">
-               <h2>COVID-19 Auto Simulation</h2>
-               <br>
-               <button class='btn btn-success' id='man-but' onclick="switchManual()" type='button'>Create Manual
-               Nodes
-               </button>
-               <button class='btn btn-light' id='fac-but' onclick="switchFacial()" type='button'>Use Facial
-               Recognition
-               </button>
-               <br>
-               <br>
-               {# add facial-recognition form#}
-               {% include "includes/facial_rec_form.html" %}                 
-               <form class="theme-form" onsubmit="return validateForm()" action="/covid19/result" enctype="multipart/form-data" method="POST" name='myForm' id='myForm'>
-                  {% csrf_token %}
-                  {# add region based network form#}
-                  {% include "includes/region_based_network_form.html" %}
-            </div>
-            <div class="col-sm-4">
-            <br>
-            <br>
-            <br>
-            <div style="top:4px;left:-177px;position: relative;">
-            <button class='btn btn-light' id='reg-but' onclick="switchRegional()" type='button'>Region-based
-            Nodes
-            </button>
-            </div>
-            <div class="card" style='top:25px' name='model'>
-            <div class="card-header pb-0">
-            <h5>Model Characteristics</h5>
-            </div>
-            <div class="card-body">
-            <fieldset class="mb-3">
+    <div class="page-body" style="margin-left: 10px;">
+        <!-- Container-fluid starts-->
+        <div class="container-fluid">
             <div class="row">
-            <label class="col-form-label col-sm-3 pt-0">Model</label>
-            <div class="col-sm-9">
-            <div class="form-check radio radio-primary">
-            <input class="form-check-input" id="si" type="radio" name="model" value="0"
-               checked>
-            <label class="form-check-label" for="si">SI (Susceptible-Infected)</label>
+                <div class="col-sm-4">
+                    <h2>COVID-19 Auto Simulation</h2>
+                    <br>
+                    <button class='btn btn-success' id='man-but' onclick="switchManual()" type='button'>Create Manual
+                        Nodes
+                    </button>
+                    <button class='btn btn-light' id='fac-but' onclick="switchFacial()" type='button'>Use Facial
+                        Recognition
+                    </button>
+                    <br>
+                    <br>
+                    {# add facial-recognition form#}
+                    {% include "includes/forms/facial_rec_form.html" %}
+                    <form class="theme-form" onsubmit="return validateForm()" action="/covid19/result"
+                          enctype="multipart/form-data" method="POST" name='myForm' id='myForm'>
+                        {% csrf_token %}
+                        {# add region based network form#}
+                        {% include "includes/forms/region_based_network_form.html" %}
+                </div>
+                <div class="col-sm-4">
+                    <br>
+                    <br>
+                    <br>
+                    <div style="top:4px;left:-177px;position: relative;">
+                        <button class='btn btn-light' id='reg-but' onclick="switchRegional()" type='button'>Region-based
+                            Nodes
+                        </button>
+                    </div>
+                    {# Model Characteristics without Select Graph dropdown  #}
+                    {% include "includes/forms/model_characteristics_form.html" %}
+                </div>
             </div>
-            <div class="form-check radio radio-primary">
-            <input class="form-check-input" id="sis" type="radio" name="model"
-               value="1">
-            <label class="form-check-label" for="sis">SIS
-            (Susceptible-Infected-Susceptible)</label>
-            </div>
-            <div class="form-check radio radio-primary">
-            <input class="form-check-input" id="sir" type="radio" name="model"
-               value="2">
-            <label class="form-check-label" for="sir">SIR
-            (Susceptible-Infected-Removed)</label>
-            </div>
-            </div>
-            </div>
-            </fieldset>
-            <div class="mb-3 row">
-            <br>
-            <label class="col-sm-3 col-form-label" for="time">Time (in Days)</label>
-            <div class="col-sm-9">
-            <input class="form-control" id='time' onclick="hideMyAlert('time_alert')"
-               name="time" type="text" placeholder="10-500">
-            </div>
-            <br>
-            <br>
-            {% include "includes/error_message.html" with alert_id="time_alert" %}
-            </div>
-            <div class="mb-3 row">
-            <br>
-            <label class="col-sm-3 col-form-label" for="seeds">Seeds (in %)</label>
-            <div class="col-sm-9">
-            <input class="form-control" id='seeds' onclick="hideMyAlert('seeds_alert')"
-               name="seeds" type="text" placeholder="0-100">
-            </div>
-            <br>
-            <br>
-            {% include "includes/error_message.html" with alert_id="seeds_alert" %}
-            </div>
-            <div class="card-footer">
-            <button type='submit' class="btn btn-primary">Start Simulation</button>
-            <button class="btn btn-secondary">Reset Values</button>
-            </div>
-            </form>
-            </div>
-            </div>
-            </div>
-         </div>
-      </div>
-      <!-- Container-fluid Ends-->
-   </div>
-   <script src="{% static 'js/common.js' %}"></script>
-   {% include 'common/footer.html' %}
+        <div class="row">
+                    <div>
+                        <button type='submit' class="btn btn-primary">Start Simulation</button>
+                        <button class="btn btn-secondary">Reset Values</button>
+                        <br>
+                        <br>
+                    </div>
+                    </form>
+                </div>
+        </div>
+        <!-- Container-fluid Ends-->
+    </div>
+    <script src="{% static 'js/common.js' %}"></script>
+    {% include 'common/footer.html' %}
 </div>

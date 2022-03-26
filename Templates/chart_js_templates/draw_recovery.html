@@ -1,6 +1,7 @@
 <script>
+
    //--------------------------------------TOTAL RECOVERY----------------------------------------
-   
+
    function getTotalRecoveryData(){
          var inf = '{{data.total_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
          var labels = [];
@@ -85,7 +86,7 @@
          return config;
       }
       var myEthRecoveryChart = new Chart(
-         document.getElementById('Eth_Recovery'),
+         document.getElementById('Ethnic_Recovery'),
          getEthRecoveryConfig()
       );
    //--------------------------------------------GENDER RECOVERY--------------------------------------------
@@ -126,14 +127,14 @@
          return config;
       }
       var myGenRecoveryChart = new Chart(
-         document.getElementById('Gen_Recovery'),
+         document.getElementById('Gender_Recovery'),
          getGenRecoveryConfig()
       );
    //--------------------------------------------AGE RECOVERY----------------------------------------------
       function getAgeRecoveryData(){
          var child_rec = '{{data.child_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
          var adult_rec = '{{data.adult_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
-         var senior_rec = '{{data.senior_rec}}'.split(',').map(function(item){return parseInt(item, 10);}); 
+         var senior_rec = '{{data.senior_rec}}'.split(',').map(function(item){return parseInt(item, 10);});
          ilabel = Math.max(child_rec.length,adult_rec.length,senior_rec.length);
          var labels = [];
          for (i = 1; i <= ilabel; i++) {
