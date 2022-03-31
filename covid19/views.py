@@ -2,6 +2,7 @@ from django.conf import settings
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from networkx import barabasi_albert_graph
+
 from compartmental_models import si, sir, sis
 
 from .scripts.csv_generator import *
@@ -10,10 +11,11 @@ from .scripts.infection_prediction import *
 
 def getIndex(request):
     template = "covid19/index.html"
-    data = pd.read_csv('datasets/demography.csv',index_col=0)
+    data = pd.read_csv("datasets/demography.csv", index_col=0)
     area_names = list(data.index)
     data = {"dobj": area_names}
     return render(request, template, data)
+
 
 def getResult(request):
 
@@ -72,7 +74,13 @@ def getResult(request):
         )
         is_sir = True
 
-    data = {"data": model_data, "N": N, "covid_results": covid_results, "model_name": model_name, "is_sir": is_sir,}
+    data = {
+        "data": model_data,
+        "N": N,
+        "covid_results": covid_results,
+        "model_name": model_name,
+        "is_sir": is_sir,
+    }
 
     return render(request, "includes/results/results_view.html", data)
 
